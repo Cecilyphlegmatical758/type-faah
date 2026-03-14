@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  /* Default: Sage Green theme */
+  --bg: #2c3639;
+  --bg-secondary: #3f4e4f;
+  --bg-card: #354043;
+  --text: #dcd7c9;
+  --text-dim: #6b7280;
+  --text-correct: #a7c4a0;
+  --text-error: #e07474;
+  --accent: #a7c4a0;
+  --accent-secondary: #c8d8c0;
+  --key-bg: #f5f0e8;
+  --key-bg-alt: #c8d8c0;
+  --key-bg-accent: #a7c4a0;
+  --key-text: #2c3639;
+  --key-shadow: #b8b3a8;
+  --key-active: #e8e3d8;
+  --cursor: #a7c4a0;
+  --border: #4a5859;
+}
+
+[data-theme="ocean"] {
+  --bg: #1a2332;
+  --bg-secondary: #243447;
+  --bg-card: #1e2d3d;
+  --text: #c8d6e5;
+  --text-dim: #576574;
+  --text-correct: #74b9ff;
+  --text-error: #ff7675;
+  --accent: #74b9ff;
+  --accent-secondary: #a1c9f4;
+  --key-bg: #e8f0fe;
+  --key-bg-alt: #a1c9f4;
+  --key-bg-accent: #74b9ff;
+  --key-text: #1a2332;
+  --key-shadow: #9aa8b8;
+  --key-active: #d5e5f5;
+  --cursor: #74b9ff;
+  --border: #34495e;
+}
+
+[data-theme="lavender"] {
+  --bg: #2d2640;
+  --bg-secondary: #3d3556;
+  --bg-card: #332b4a;
+  --text: #d5cfe5;
+  --text-dim: #6b6280;
+  --text-correct: #b39ddb;
+  --text-error: #ef9a9a;
+  --accent: #b39ddb;
+  --accent-secondary: #d1c4e9;
+  --key-bg: #f0ecf8;
+  --key-bg-alt: #d1c4e9;
+  --key-bg-accent: #b39ddb;
+  --key-text: #2d2640;
+  --key-shadow: #a89cc0;
+  --key-active: #e3dcf0;
+  --cursor: #b39ddb;
+  --border: #4a4068;
+}
+
+[data-theme="rose"] {
+  --bg: #2e2030;
+  --bg-secondary: #3e2d40;
+  --bg-card: #352538;
+  --text: #e0d0d5;
+  --text-dim: #806070;
+  --text-correct: #f48fb1;
+  --text-error: #ef5350;
+  --accent: #f48fb1;
+  --accent-secondary: #f8bbd0;
+  --key-bg: #fce4ec;
+  --key-bg-alt: #f8bbd0;
+  --key-bg-accent: #f48fb1;
+  --key-text: #2e2030;
+  --key-shadow: #c8a0b0;
+  --key-active: #f5d5e0;
+  --cursor: #f48fb1;
+  --border: #5a3848;
+}
+
+[data-theme="coral"] {
+  --bg: #2c2525;
+  --bg-secondary: #3e3535;
+  --bg-card: #352c2c;
+  --text: #e0d5d0;
+  --text-dim: #806560;
+  --text-correct: #ff8a65;
+  --text-error: #ef5350;
+  --accent: #ff8a65;
+  --accent-secondary: #ffab91;
+  --key-bg: #fbe9e7;
+  --key-bg-alt: #ffab91;
+  --key-bg-accent: #ff8a65;
+  --key-text: #2c2525;
+  --key-shadow: #c8a898;
+  --key-active: #f5dcd5;
+  --cursor: #ff8a65;
+  --border: #5a4040;
+}
+
+[data-theme="amber"] {
+  --bg: #2c2a20;
+  --bg-secondary: #3e3a30;
+  --bg-card: #353228;
+  --text: #e0dcd0;
+  --text-dim: #807860;
+  --text-correct: #ffd54f;
+  --text-error: #ef5350;
+  --accent: #ffd54f;
+  --accent-secondary: #ffe082;
+  --key-bg: #fff8e1;
+  --key-bg-alt: #ffe082;
+  --key-bg-accent: #ffd54f;
+  --key-text: #2c2a20;
+  --key-shadow: #c8c098;
+  --key-active: #f5f0d5;
+  --cursor: #ffd54f;
+  --border: #5a5430;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+/* Cursor blink animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s ease-in-out infinite;
+}
+
+/* Key press animation */
+@keyframes keyPress {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
+.key-pressed {
+  animation: keyPress 0.1s ease-out;
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--key-shadow) !important;
+}
+
+/* Smooth transitions for theme changes */
+.theme-transition,
+.theme-transition * {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease !important;
+}
+
+/* Result fade in */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Focus indicator pulse */
+@keyframes focusPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.focus-pulse {
+  animation: focusPulse 2s ease-in-out infinite;
+}

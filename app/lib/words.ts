@@ -1,0 +1,58 @@
+export const commonWords = [
+  "the", "be", "to", "of", "and", "a", "in", "that", "have", "I",
+  "it", "for", "not", "on", "with", "he", "as", "you", "do", "at",
+  "this", "but", "his", "by", "from", "they", "we", "say", "her", "she",
+  "or", "an", "will", "my", "one", "all", "would", "there", "their", "what",
+  "so", "up", "out", "if", "about", "who", "get", "which", "go", "me",
+  "when", "make", "can", "like", "time", "no", "just", "him", "know", "take",
+  "people", "into", "year", "your", "good", "some", "could", "them", "see",
+  "other", "than", "then", "now", "look", "only", "come", "its", "over",
+  "think", "also", "back", "after", "use", "two", "how", "our", "work",
+  "first", "well", "way", "even", "new", "want", "because", "any", "these",
+  "give", "day", "most", "us", "great", "between", "need", "large", "under",
+  "never", "each", "right", "high", "really", "last", "long", "story",
+  "small", "turn", "end", "play", "hand", "part", "run", "begin", "seem",
+  "help", "show", "hear", "city", "keep", "point", "home", "read", "group",
+  "thought", "went", "few", "move", "live", "night", "open", "sure", "thing",
+  "change", "line", "hard", "start", "might", "place", "close", "light",
+  "head", "stand", "own", "page", "letter", "mother", "answer", "found",
+  "still", "learn", "should", "world", "house", "where", "set", "off",
+  "same", "old", "while", "mean", "does", "let", "three", "air", "put",
+  "much", "earth", "too", "got", "name", "find", "land", "every", "through",
+  "study", "food", "near", "tree", "life", "paper", "state", "eye", "never",
+  "school", "river", "room", "did", "boy", "once", "animal", "book", "car",
+  "main", "enough", "plain", "girl", "usual", "young", "ready", "above",
+  "ever", "red", "list", "though", "feel", "talk", "bird", "soon", "body",
+  "dog", "family", "leave", "song", "stop", "walk", "few", "next", "side",
+  "white", "sea", "began", "grow", "mountain", "cut", "real", "almost",
+  "face", "watch", "far", "build", "many", "kind", "must", "tell", "door",
+  "color", "number", "water", "power", "hour", "word", "fire", "south",
+  "problem", "piece", "told", "knew", "pass", "since", "top", "whole",
+  "king", "space", "street", "yet", "fish", "idea", "north", "ago",
+  "write", "music", "war", "reach", "rest", "field", "game", "best",
+  "dark", "class", "wind", "question", "mark", "boat", "country",
+  "map", "half", "rock", "order", "ground", "table", "form", "system",
+  "love", "better", "money", "simple", "voice", "road", "rain", "rule",
+  "able", "star", "across", "early", "hold", "west", "fast", "deep",
+  "sleep", "cover", "often", "along", "done", "travel", "center", "plant",
+  "measure", "product", "black", "short", "behind", "warm", "common",
+  "strong", "special", "mind", "bring", "explain", "dry", "clear",
+  "pattern", "complete", "shall", "shape", "cold", "plan", "drive",
+  "true", "pull", "sun", "note", "check", "area", "verb", "fly",
+  "fall", "lead", "cry", "machine", "record", "stood", "contain", "front",
+  "teach", "ocean", "wood", "green", "certain", "happy", "morning",
+  "summer", "winter", "ball", "figure", "wonder", "develop", "boat",
+  "language", "busy", "garden", "practice", "perhaps", "final",
+  "island", "million", "picture", "sentence", "interest", "produce",
+  "surface", "against", "remember", "toward", "course", "believe",
+  "beautiful", "program", "minute", "finger", "natural", "hundred"
+];
+
+export function generateWords(count: number): string[] {
+  const words: string[] = [];
+  for (let i = 0; i < count; i++) {
+    const randomIndex = Math.floor(Math.random() * commonWords.length);
+    words.push(commonWords[randomIndex]);
+  }
+  return words;
+}

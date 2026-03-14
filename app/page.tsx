@@ -1,0 +1,352 @@
+"use client";
+
+import React, { useState, useCallback, useEffect, useRef } from "react";
+import Header from "./components/Header";
+import TypingArea from "./components/TypingArea";
+import Keyboard from "./components/Keyboard";
+import Results from "./components/Results";
+import { generateWords } from "./lib/words";
+import { playKeySound, playSpaceSound, playCompleteSound } from "./lib/sounds";
+
+type GameState = "idle" | "running" | "finished";
+
+interface TypedChar {
+  char: string;
+  correct: boolean;
+}
+
+export default function Home() {
+  // Theme & timer
+  const [theme, setTheme] = useState("default");
+  const [timerDuration, setTimerDuration] = useState(30);
+
+  // Game state
+  const [gameState, setGameState] = useState<GameState>("idle");
+  const [words, setWords] = useState<string[]>(() => generateWords(200));
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
+  const [typedChars, setTypedChars] = useState<TypedChar[][]>([]);
+  const [isFocused, setIsFocused] = useState(false);
+  const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
+
+  // Timer
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [endTime, setEndTime] = useState<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Stats
+  const [correctChars, setCorrectChars] = useState(0);
+  const [incorrectChars, setIncorrectChars] = useState(0);
+  const [totalCharsTyped, setTotalCharsTyped] = useState(0);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Apply theme
+  useEffect(() => {
+    if (theme === "default") {
+      document.documentElement.removeAttribute("data-theme");
+    } else {
+      document.documentElement.setAttribute("data-theme", theme);
+    }
+  }, [theme]);
+
+  // Timer logic
+  useEffect(() => {
+    if (gameState === "running" && timerDuration > 0) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev === null) return null;
+          if (prev <= 1) {
+            finishGame();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameState, timerDuration]);
+
+  const finishGame = useCallback(() => {
+    setGameState("finished");
+    setEndTime(Date.now());
+    setIsFocused(false);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    playCompleteSound();
+  }, []);
+
+  const startGame = useCallback(() => {
+    setGameState("running");
+    setStartTime(Date.now());
+    if (timerDuration > 0) {
+      setTimeLeft(timerDuration);
+    }
+  }, [timerDuration]);
+
+  const restartGame = useCallback(() => {
+    setGameState("idle");
+    setWords(generateWords(200));
+    setCurrentWordIndex(0);
+    setCurrentCharIndex(0);
+    setTypedChars([]);
+    setTimeLeft(null);
+    setStartTime(null);
+    setEndTime(null);
+    setCorrectChars(0);
+    setIncorrectChars(0);
+    setTotalCharsTyped(0);
+    setPressedKeys(new Set());
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    // Focus input after restart
+    setTimeout(() => {
+      inputRef.current?.focus();
+      setIsFocused(true);
+    }, 50);
+  }, []);
+
+  const handleFocus = useCallback(() => {
+    setIsFocused(true);
+    inputRef.current?.focus();
+  }, []);
+
+  // Handle keyboard input
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent | KeyboardEvent) => {
+      // Prevent default for keys we handle
+      // Tab key tracking for Tab+Enter restart
+      if (e.key === "Tab") {
+        e.preventDefault();
+        return;
+      }
+
+      // Restart shortcut: Tab+Enter or Cmd+Enter
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+        e.preventDefault();
+        restartGame();
+        return;
+      }
+
+      if (gameState === "finished") return;
+      if (!isFocused) {
+        setIsFocused(true);
+        inputRef.current?.focus();
+      }
+
+      // Track pressed keys for keyboard visualization
+      setPressedKeys((prev) => new Set(prev).add(e.code));
+
+      const currentWord = words[currentWordIndex];
+      if (!currentWord) return;
+
+      if (e.key === "Backspace") {
+        e.preventDefault();
+        if (currentCharIndex > 0) {
+          playKeySound(true);
+          setCurrentCharIndex((prev) => prev - 1);
+          setTypedChars((prev) => {
+            const newTyped = [...prev];
+            const wordChars = [...(newTyped[currentWordIndex] || [])];
+            wordChars.pop();
+            newTyped[currentWordIndex] = wordChars;
+            return newTyped;
+          });
+        }
+        return;
+      }
+
+      if (e.key === " ") {
+        e.preventDefault();
+        if (currentCharIndex === 0) return; // Don't allow empty words
+
+        playSpaceSound();
+
+        // Move to next word
+        setCurrentWordIndex((prev) => prev + 1);
+        setCurrentCharIndex(0);
+        setTotalCharsTyped((prev) => prev + 1); // Count space
+
+        // Check if we need more words
+        if (currentWordIndex >= words.length - 20) {
+          setWords((prev) => [...prev, ...generateWords(100)]);
+        }
+        return;
+      }
+
+      // Regular character input
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+
+        // Start game on first keypress
+        if (gameState === "idle") {
+          startGame();
+        }
+
+        const isCorrect = e.key === currentWord[currentCharIndex];
+
+        if (isCorrect) {
+          setCorrectChars((prev) => prev + 1);
+        } else {
+          setIncorrectChars((prev) => prev + 1);
+        }
+        setTotalCharsTyped((prev) => prev + 1);
+
+        playKeySound(isCorrect);
+
+        setTypedChars((prev) => {
+          const newTyped = [...prev];
+          const wordChars = [...(newTyped[currentWordIndex] || [])];
+          wordChars.push({ char: e.key, correct: isCorrect });
+          newTyped[currentWordIndex] = wordChars;
+          return newTyped;
+        });
+
+        setCurrentCharIndex((prev) => prev + 1);
+      }
+    },
+    [
+      gameState,
+      isFocused,
+      words,
+      currentWordIndex,
+      currentCharIndex,
+      startGame,
+      restartGame,
+    ]
+  );
+
+  const handleKeyUp = useCallback((e: React.KeyboardEvent | KeyboardEvent) => {
+    setPressedKeys((prev) => {
+      const next = new Set(prev);
+      next.delete(e.code);
+      return next;
+    });
+  }, []);
+
+  // Global keyboard listener
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      // Don't capture if user is typing in a different input
+      if (
+        e.target instanceof HTMLElement &&
+        e.target !== inputRef.current &&
+        e.target.tagName === "INPUT"
+      ) {
+        return;
+      }
+
+      handleKeyDown(e);
+    };
+
+    const handleGlobalKeyUp = (e: KeyboardEvent) => {
+      handleKeyUp(e);
+    };
+
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    window.addEventListener("keyup", handleGlobalKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleGlobalKeyDown);
+      window.removeEventListener("keyup", handleGlobalKeyUp);
+    };
+  }, [handleKeyDown, handleKeyUp]);
+
+  // Calculate results
+  const getResults = useCallback(() => {
+    const elapsed = endTime && startTime ? (endTime - startTime) / 1000 : timerDuration;
+    const minutes = elapsed / 60;
+    const wpm = minutes > 0 ? Math.round(correctChars / 5 / minutes) : 0;
+    const rawWpm =
+      minutes > 0 ? Math.round(totalCharsTyped / 5 / minutes) : 0;
+    const accuracy =
+      totalCharsTyped > 0
+        ? Math.round((correctChars / totalCharsTyped) * 100)
+        : 100;
+
+    return {
+      wpm,
+      rawWpm,
+      accuracy,
+      correctChars,
+      incorrectChars,
+      totalChars: totalCharsTyped,
+      timeElapsed: Math.round(elapsed),
+    };
+  }, [
+    endTime,
+    startTime,
+    timerDuration,
+    correctChars,
+    incorrectChars,
+    totalCharsTyped,
+  ]);
+
+  return (
+    <div
+      className="min-h-screen flex flex-col transition-colors duration-400"
+      style={{ backgroundColor: "var(--bg)" }}
+    >
+      {/* Hidden input for mobile and focus management */}
+      <input
+        ref={inputRef}
+        type="text"
+        className="absolute opacity-0 w-0 h-0"
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck={false}
+      />
+
+      <Header
+        currentTheme={theme}
+        onThemeChange={setTheme}
+        currentTimer={timerDuration}
+        onTimerChange={(t) => {
+          setTimerDuration(t);
+          restartGame();
+        }}
+        isRunning={gameState === "running"}
+      />
+
+      {/* Main content */}
+      <main className="flex-1 flex flex-col items-center justify-center px-8 -mt-8">
+        {gameState === "finished" ? (
+          <Results {...getResults()} onRestart={restartGame} />
+        ) : (
+          <TypingArea
+            words={words}
+            currentWordIndex={currentWordIndex}
+            currentCharIndex={currentCharIndex}
+            typedChars={typedChars}
+            isFocused={isFocused}
+            onFocus={handleFocus}
+            timeLeft={timeLeft}
+            timerDuration={timerDuration}
+            isRunning={gameState === "running"}
+          />
+        )}
+      </main>
+
+      {/* Keyboard */}
+      {gameState !== "finished" && (
+        <footer className="pb-6 px-8 mt-auto">
+          <Keyboard pressedKeys={pressedKeys} />
+        </footer>
+      )}
+    </div>
+  );
+}
