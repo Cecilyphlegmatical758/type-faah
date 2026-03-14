@@ -99,16 +99,14 @@ export default function TypingArea({
   const scrollOffsetRef = useRef(0);
   const rafRef = useRef<number>(0);
 
-  // Position the floating cursor via direct DOM measurement
-  // Measures relative to the CONTAINER (overflow div), not the wrapper
-  // This way translateY on wrapper doesn't offset the cursor
-  const updateCursor = useCallback(() => {
-    if (!cursorRef.current || !activeWordRef.current || !containerRef.current) return;
+  // Position cursor using offsetLeft/offsetTop (layout-based, not paint-based)
+  // This gives us the FINAL position regardless of CSS transitions in progress
+  const updateCursor = useCallback((instant?: boolean) => {
+    if (!cursorRef.current || !activeWordRef.current || !wordsWrapperRef.current) return;
 
     const cursor = cursorRef.current;
     const wordEl = activeWordRef.current;
-    const containerEl = containerRef.current;
-    const containerRect = containerEl.getBoundingClientRect();
+    const wrapperEl = wordsWrapperRef.current;
 
     const charSpans = wordEl.querySelectorAll<HTMLSpanElement>("[data-char-idx]");
     const totalChars = charSpans.length;
@@ -119,33 +117,45 @@ export default function TypingArea({
 
     if (currentCharIndex < totalChars) {
       const charEl = charSpans[currentCharIndex];
-      const charRect = charEl.getBoundingClientRect();
-      left = charRect.left - containerRect.left - 1;
-      top = charRect.top - containerRect.top + 4;
-      height = charRect.height - 8;
+      left = wordEl.offsetLeft + charEl.offsetLeft - 1;
+      top = wordEl.offsetTop + charEl.offsetTop - scrollOffsetRef.current + 4;
+      height = charEl.offsetHeight - 8;
     } else {
       const lastChild = wordEl.lastElementChild as HTMLElement;
       if (lastChild) {
-        const rect = lastChild.getBoundingClientRect();
-        left = rect.right - containerRect.left + 1;
-        top = rect.top - containerRect.top + 4;
-        height = rect.height - 8;
+        left = wordEl.offsetLeft + lastChild.offsetLeft + lastChild.offsetWidth + 1;
+        top = wordEl.offsetTop + lastChild.offsetTop - scrollOffsetRef.current + 4;
+        height = lastChild.offsetHeight - 8;
       } else {
-        return;
+        left = wordEl.offsetLeft - 1;
+        top = wordEl.offsetTop - scrollOffsetRef.current + 4;
+        height = wordEl.offsetHeight - 8;
       }
     }
 
-    cursor.style.transform = `translate(${left}px, ${top}px)`;
-    cursor.style.height = `${height}px`;
+    // On line change, skip the cursor transition so it doesn't animate
+    // from the old line position to the new one
+    if (instant) {
+      cursor.style.transition = "none";
+      cursor.style.transform = `translate(${left}px, ${top}px)`;
+      cursor.style.height = `${height}px`;
+      // Force reflow then re-enable transition
+      cursor.offsetHeight;
+      cursor.style.transition = "";
+    } else {
+      cursor.style.transform = `translate(${left}px, ${top}px)`;
+      cursor.style.height = `${height}px`;
+    }
+
     cursor.style.opacity = isFocused ? "1" : "0";
   }, [currentCharIndex, isFocused]);
 
-  // Update cursor position on every char/word change
+  // On character change within same word - smooth cursor slide
   useEffect(() => {
-    requestAnimationFrame(updateCursor);
-  }, [currentWordIndex, currentCharIndex, updateCursor]);
+    requestAnimationFrame(() => updateCursor(false));
+  }, [currentCharIndex, updateCursor]);
 
-  // Smooth scroll
+  // Smooth scroll + cursor jump on word change
   const updateScroll = useCallback(() => {
     if (!activeWordRef.current || !wordsWrapperRef.current) return;
 
@@ -157,20 +167,22 @@ export default function TypingArea({
     if (lineH <= 0) return;
 
     const targetScroll = Math.max(0, Math.floor(wordTop / lineH) * lineH);
+    const scrollChanged = targetScroll !== scrollOffsetRef.current;
 
-    if (targetScroll !== scrollOffsetRef.current) {
+    if (scrollChanged) {
       scrollOffsetRef.current = targetScroll;
       wrapperEl.style.transform = `translateY(-${targetScroll}px)`;
     }
-  }, []);
+
+    // If scroll changed, jump cursor instantly (no slide from old line)
+    // Otherwise smooth slide to new word position
+    updateCursor(scrollChanged);
+  }, [updateCursor]);
 
   useEffect(() => {
     cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => {
-      updateScroll();
-      updateCursor();
-    });
-  }, [currentWordIndex, updateScroll, updateCursor]);
+    rafRef.current = requestAnimationFrame(updateScroll);
+  }, [currentWordIndex, updateScroll]);
 
   useEffect(() => {
     if (wordsWrapperRef.current) {
