@@ -103,21 +103,21 @@ export default function TypingArea({
       <div
         ref={containerRef}
         onClick={onFocus}
-        className="relative h-[160px] overflow-hidden cursor-text select-none"
+        className="relative h-[180px] overflow-hidden cursor-text select-none"
         style={{
           maskImage:
-            "linear-gradient(to bottom, black 0%, black 65%, transparent 100%)",
+            "linear-gradient(to bottom, black 0%, black 60%, transparent 100%)",
           WebkitMaskImage:
-            "linear-gradient(to bottom, black 0%, black 65%, transparent 100%)",
+            "linear-gradient(to bottom, black 0%, black 60%, transparent 100%)",
         }}
       >
         <div
-          className="flex flex-wrap gap-x-[14px] gap-y-[10px]"
+          className="flex flex-wrap gap-x-[16px] gap-y-[12px]"
           style={{
-            fontSize: "28px",
+            fontSize: "32px",
             fontFamily: "var(--font-geist-mono)",
             letterSpacing: "0.01em",
-            lineHeight: "1.8",
+            lineHeight: "1.75",
           }}
         >
           {words.slice(visibleRange.start, visibleRange.end).map((word, idx) => {
@@ -158,7 +158,7 @@ export default function TypingArea({
                     <span key={charIdx} className="relative inline-block">
                       {showCursor && (
                         <span
-                          className="absolute left-0 top-[4px] bottom-[4px] w-[3px] cursor-blink rounded-full -translate-x-[1px]"
+                          className="absolute left-0 top-[5px] bottom-[5px] w-[3px] cursor-blink rounded-full -translate-x-[1px]"
                           style={{ backgroundColor: "var(--cursor)" }}
                         />
                       )}
@@ -199,7 +199,7 @@ export default function TypingArea({
                   currentCharIndex >= word.length &&
                   currentCharIndex === wordTyped.length && (
                     <span
-                      className="absolute top-[4px] bottom-[4px] w-[3px] cursor-blink rounded-full"
+                      className="absolute top-[5px] bottom-[5px] w-[3px] cursor-blink rounded-full"
                       style={{
                         backgroundColor: "var(--cursor)",
                         right: "-2px",
