@@ -120,34 +120,42 @@ const punjabiWords = [
 ];
 
 // ═══════════════════════════════════════
-// NEPALI GAALIS
+// NEPALI GAALIS (actual popular ones)
 // ═══════════════════════════════════════
 const nepaliWords = [
+  // Top tier - most used
   "muji", "lado", "puti", "machikne", "randi",
-  "kukur", "gadha", "sungur", "boka", "machikney",
-  "mukhiya", "haguwa", "charpi", "jhyamma",
-  "bokaa", "randiko", "pakhe", "khate",
-  "dhoti", "bhedaa", "gadhaa", "sungurko",
-  "mujibhai", "latokhopey", "khaatey", "gaijaatre",
-  "jhantuko", "laaduko", "putiko", "randikochhoro",
-  "murkha", "aalchi", "kaamchor", "biraalaa",
-  "gadheroo", "chhyaproo", "jhantunath", "laadunath",
-  "bhaalu", "himaalko", "saalaa", "kukurko",
-  "machha", "randibaaz", "mutubhai", "gidarko",
-  "mujikobaan", "ladokhane", "putimarne",
-  "machiknekoban", "kukurjasto",
-  "gadhajasto", "sungurjasto", "bokajasto",
-  "randikocheli", "randikochhora",
-  "mujikonaati", "ladokotukra",
-  "haguwamanxe", "charpimakhune",
-  "bhedabuddi", "gadhabuddi", "sungurbuddi",
-  "pakheko", "khateko", "dhotiko",
-  "jhantubhai", "laadubhai", "putibhai",
-  "chhyapro", "gadheruko", "biraalko",
-  "sungurkomukh", "bokakokaan", "kukurkopuchchar",
-  "gadhakokaan", "bhedakokhutta", "gidarkomukh",
-  "mujimuji", "ladolado", "putiputi",
-  "machiknemachikne", "randikorandi",
+  "chikne", "bhalu", "kukur", "gadha", "boka",
+  "sungur", "chhada", "haguwa", "muta", "jhanto",
+  // Common insults
+  "pakhe", "khate", "dhoti", "gobre", "dalle",
+  "surtiko", "charsi", "madise", "bhaate", "kale",
+  "geda", "fuchche", "chhapri", "tapke", "lutho",
+  // Body part gaalis
+  "lado", "puti", "geda", "jhanto", "giddhi",
+  "tunto", "mula", "guu", "muto", "pisab",
+  // Combo gaalis
+  "machikne", "bhosdike", "randiko",
+  "kukurko", "gadhako", "sungurko", "bokako",
+  "randikochoro", "randikochori",
+  "machiknemuji", "ladokhane", "putichikne",
+  // Insults about character
+  "murkha", "gadha", "sano", "kamina", "badmaas",
+  "chor", "thag", "luchha", "lafanga", "dalal",
+  "bikau", "nachune", "chamcha", "chapluus",
+  // Animal comparisons
+  "kukur", "sungur", "boka", "gadha", "bhalu",
+  "gidar", "syaal", "biralo", "chheparo", "sarpa",
+  "bandar", "ullu", "gadhagoru", "chyakhura",
+  // Action gaalis
+  "hag", "mut", "chik", "lado", "kha",
+  "mar", "sid", "bhag", "bhaag", "kaat",
+  // Extended
+  "raandi", "maachikne", "laado", "puuti",
+  "mujji", "chikney", "bhaluu", "kukuur",
+  "saalaa", "kamini", "harami", "haramni",
+  "khatey", "pakhey", "dhottey", "gobrey",
+  "jhantey", "gedey", "fucchhey", "dalla",
 ];
 
 // ═══════════════════════════════════════
