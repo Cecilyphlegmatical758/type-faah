@@ -25,7 +25,7 @@ export default function Home() {
   const [soundProfile, setSoundProfile] = useState<SoundProfile>("bubble");
   const [mistakeThreshold1, setMistakeThreshold1] = useState(5);
   const [mistakeThreshold2, setMistakeThreshold2] = useState(10);
-  const [wordMode, setWordMode] = useState<WordMode>("mixed");
+  const [wordMode, setWordMode] = useState<WordMode>("hindi");
 
   // Game state
   const [gameState, setGameState] = useState<GameState>("idle");
