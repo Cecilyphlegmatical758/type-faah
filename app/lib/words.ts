@@ -158,11 +158,11 @@ const nepaliWords = [
   // Rage combos
   "randikochoro", "randikochori", "machiknemuji",
   "kukurchoro", "gadhachoro", "bhedachoro",
-  "bokakochoro", "sungurkochoro", "bhalukouchoro", "teroamarandi", "teroamabhalu", "damaikochoro", "kamikochoro", "damaikochori", "kamikochori", "dalitkochoro", "dalitkochori",
+  "bokakochoro", "sungurkochoro", "bhalukouchoro", "radikochoro", "radikochori",
   // Character attacks
   "sala", "kamina", "badmas", "chor", "thag",
   "luchha", "lafanga", "dalal", "bikau", "chamcha",
-  "nachune", "lutho", "ganjedi", "dalit", "damai", "kami", "sarki", "twake",
+  "nachune", "lutho", "ganjedi", "twake",
   // Body / vulgar
   "lado", "puti", "geda", "jatho", "giddhi",
   "tunto", "guu", "mut", "ladkokokapal", "putikobhutla", "kando", "gula", "gulo",
