@@ -71,13 +71,13 @@ function Key({
         height: `${height}px`,
         borderRadius: radius,
         flexShrink: 0,
-        backgroundColor: "var(--key-bg)",
+        backgroundColor: isPressed ? "var(--key-bg-accent)" : "var(--key-bg)",
         color: "var(--key-text)",
-        transform: isPressed ? "scale(0.97)" : "scale(1)",
-        transition: "transform 0.05s ease, box-shadow 0.05s ease",
+        transform: isPressed ? "scale(0.95) translateY(2px)" : "scale(1) translateY(0)",
+        transition: "transform 0.04s ease, box-shadow 0.04s ease, background-color 0.04s ease",
         boxShadow: isPressed
-          ? `inset 0 2px 4px rgba(0,0,0,0.12),
-             0 0 0 0.5px rgba(0,0,0,0.1)`
+          ? `inset 0 2px 6px rgba(0,0,0,0.2),
+             0 0 0 0.5px rgba(0,0,0,0.15)`
           : `inset 0 1px 0 0 rgba(255,255,255,0.8),
              0 1px 2px rgba(0,0,0,0.06),
              0 1px 0 rgba(0,0,0,0.04),
