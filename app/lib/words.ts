@@ -120,42 +120,42 @@ const punjabiWords = [
 ];
 
 // ═══════════════════════════════════════
-// NEPALI GAALIS (actual popular ones)
+// NEPALI GAALIS (popular / aggressive)
 // ═══════════════════════════════════════
 const nepaliWords = [
-  // Top tier - most used
+  // Heavy hitters - most common
   "muji", "lado", "puti", "machikne", "randi",
   "chikne", "bhalu", "kukur", "gadha", "boka",
-  "sungur", "chhada", "haguwa", "muta", "jhanto",
-  // Common insults
+  "sungur", "haguwa", "chhada", "mula", "guu",
+  // Top aggressive
+  "muji", "machikne", "lado", "puti", "randi",
+  "randiko", "machikne", "chikne", "bhalu",
+  // Direct insults
   "pakhe", "khate", "dhoti", "gobre", "dalle",
-  "surtiko", "charsi", "madise", "bhaate", "kale",
-  "geda", "fuchche", "chhapri", "tapke", "lutho",
-  // Body part gaalis
+  "kale", "geda", "fuchche", "tapke", "jhanto",
+  // Rage combos
+  "randikochoro", "randikochori", "machiknemuji",
+  "kukurchoro", "gadhachoro", "bhedachoro",
+  "bokachoro", "sungurchoro", "bhaluchoro",
+  // Character attacks
+  "sala", "kamina", "badmas", "chor", "thag",
+  "luchha", "lafanga", "dalal", "bikau", "chamcha",
+  "nachune", "lutho", "charsi", "surtiko",
+  // Body / vulgar
   "lado", "puti", "geda", "jhanto", "giddhi",
-  "tunto", "mula", "guu", "muto", "pisab",
-  // Combo gaalis
-  "machikne", "bhosdike", "randiko",
-  "kukurko", "gadhako", "sungurko", "bokako",
-  "randikochoro", "randikochori",
-  "machiknemuji", "ladokhane", "putichikne",
-  // Insults about character
-  "murkha", "gadha", "sano", "kamina", "badmaas",
-  "chor", "thag", "luchha", "lafanga", "dalal",
-  "bikau", "nachune", "chamcha", "chapluus",
-  // Animal comparisons
+  "tunto", "guu", "muto", "mut", "hag",
+  // Animal insults
   "kukur", "sungur", "boka", "gadha", "bhalu",
-  "gidar", "syaal", "biralo", "chheparo", "sarpa",
-  "bandar", "ullu", "gadhagoru", "chyakhura",
-  // Action gaalis
-  "hag", "mut", "chik", "lado", "kha",
-  "mar", "sid", "bhag", "bhaag", "kaat",
-  // Extended
-  "raandi", "maachikne", "laado", "puuti",
-  "mujji", "chikney", "bhaluu", "kukuur",
-  "saalaa", "kamini", "harami", "haramni",
-  "khatey", "pakhey", "dhottey", "gobrey",
-  "jhantey", "gedey", "fucchhey", "dalla",
+  "gidar", "syaal", "biralo", "bandar", "ullu",
+  "sarpa", "chheparo",
+  // Intensifiers
+  "muji", "lado", "puti", "randi", "machikne",
+  "chikne", "haguwa", "mula", "chhada",
+  // Popular phrases as single words
+  "bajiya", "dhatteri", "maarchikne", "hattpakhe",
+  "mujilado", "putimachikne", "randibhalu",
+  "gedakha", "jhantomuji", "ladoboka",
+  "kukurboka", "gadhapakhe", "bhedagobre",
 ];
 
 // ═══════════════════════════════════════
