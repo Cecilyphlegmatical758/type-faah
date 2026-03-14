@@ -328,6 +328,7 @@ export function playMistakeSoundByIndex(index: number) {
 // WPM result sounds
 let wpmAbove80Audio: HTMLAudioElement | null = null;
 let wpm65to80Audio: HTMLAudioElement | null = null;
+let wpmBelow65Audio: HTMLAudioElement | null = null;
 
 export function playWpmResultSound(wpm: number) {
   try {
@@ -345,6 +346,13 @@ export function playWpmResultSound(wpm: number) {
       }
       wpm65to80Audio.currentTime = 0;
       wpm65to80Audio.play();
+    } else {
+      if (!wpmBelow65Audio) {
+        wpmBelow65Audio = new Audio("/sounds/wpm-below-65.mp3");
+        wpmBelow65Audio.volume = 0.8;
+      }
+      wpmBelow65Audio.currentTime = 0;
+      wpmBelow65Audio.play();
     }
   } catch { /* */ }
 }

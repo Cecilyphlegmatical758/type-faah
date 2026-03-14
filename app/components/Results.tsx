@@ -13,6 +13,20 @@ interface ResultsProps {
   onRestart: () => void;
 }
 
+function getAchievement(wpm: number, accuracy: number) {
+  if (wpm > 100 && accuracy >= 95)
+    return { emoji: "\uD83D\uDC51", title: "TYPING GOD", sub: "Bhai tu toh keyboard ka baap hai", color: "var(--accent)" };
+  if (wpm > 80)
+    return { emoji: "\uD83D\uDD25", title: "EK JHAAT BHAR KA AADMI", sub: "Speed demon - fingers on fire!", color: "var(--text-correct)" };
+  if (wpm >= 65)
+    return { emoji: "\u26A1", title: "ALAG HI LEVEL KA BANDA", sub: "Matlab wo speed thi bhai... respect", color: "var(--accent)" };
+  if (wpm >= 45)
+    return { emoji: "\uD83D\uDCAA", title: "THEEK THAAK HAI", sub: "Average hai bhai, thoda aur practice kar", color: "var(--text-dim)" };
+  if (wpm >= 25)
+    return { emoji: "\uD83D\uDC22", title: "NIKAL JAO", sub: "Mere lode ke samne se nikal jao bhai", color: "var(--text-error)" };
+  return { emoji: "\uD83D\uDC80", title: "KYA THA YE?", sub: "Bhai keyboard dekh ke type kar", color: "var(--text-error)" };
+}
+
 export default function Results({
   wpm,
   rawWpm,
@@ -22,8 +36,27 @@ export default function Results({
   timeElapsed,
   onRestart,
 }: ResultsProps) {
+  const achievement = getAchievement(wpm, accuracy);
+
   return (
     <div className="w-full flex flex-col items-center fade-in-up px-4">
+      {/* Achievement badge */}
+      <div className="text-center mb-6">
+        <div className="text-[48px] leading-none mb-2">{achievement.emoji}</div>
+        <div
+          className="text-[13px] uppercase tracking-[0.3em] font-bold"
+          style={{ color: achievement.color }}
+        >
+          {achievement.title}
+        </div>
+        <div
+          className="text-[12px] mt-1.5 tracking-wide"
+          style={{ color: "var(--text-dim)" }}
+        >
+          {achievement.sub}
+        </div>
+      </div>
+
       {/* Big WPM */}
       <div
         className="text-[120px] font-extralight tabular-nums leading-none"
@@ -35,15 +68,15 @@ export default function Results({
         {wpm}
       </div>
       <div
-        className="text-[11px] uppercase tracking-[0.45em] font-medium mt-3 mb-20"
+        className="text-[11px] uppercase tracking-[0.45em] font-medium mt-3 mb-16"
         style={{ color: "var(--text-dim)" }}
       >
         words per minute
       </div>
 
-      {/* Stats grid - 4 columns, fixed widths */}
+      {/* Stats grid */}
       <div
-        className="grid grid-cols-4 w-full mb-20"
+        className="grid grid-cols-4 w-full mb-16"
         style={{ maxWidth: "560px" }}
       >
         <div className="text-center py-1">
@@ -67,16 +100,33 @@ export default function Results({
         </div>
       </div>
 
+      {/* Sound info */}
+      <div
+        className="text-center mb-10 rounded-xl px-5 py-3"
+        style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--border)" }}
+      >
+        <div className="text-[10px] uppercase tracking-[0.2em] font-medium mb-1" style={{ color: "var(--text-dim)" }}>
+          Sound reward
+        </div>
+        <div className="text-[11px] tracking-wide" style={{ color: "var(--text)", opacity: 0.7 }}>
+          {wpm > 80
+            ? "\uD83D\uDD0A Ek jhaat bhar ka aadmi"
+            : wpm >= 65
+            ? "\uD83D\uDD0A Alag hi level ka banda tha"
+            : "\uD83D\uDD0A Nikal jao mere lode ke samne se"}
+        </div>
+      </div>
+
       {/* Restart */}
       <button
         onClick={onRestart}
-        className="group flex items-center gap-3 px-8 py-3.5 rounded-xl text-[14px] font-medium tracking-wide transition-all duration-300 hover:scale-[1.04] active:scale-[0.96] "
+        className="group flex items-center gap-3 rounded-xl text-[14px] font-medium tracking-wide transition-all duration-300 hover:scale-[1.04] active:scale-[0.96]"
         style={{
           backgroundColor: "var(--bg-secondary)",
           color: "var(--accent)",
           border: "1px solid var(--border)",
           boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
-          padding: "10px 20px",
+          padding: "12px 24px",
         }}
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-500 group-hover:rotate-[-180deg]">

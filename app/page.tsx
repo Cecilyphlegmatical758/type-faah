@@ -125,16 +125,11 @@ export default function Home() {
       timerRef.current = null;
     }
     if (soundEnabledRef.current) {
-      // Calculate WPM to decide which result sound to play
       const startT = startTime || now;
       const elapsed = (now - startT) / 1000;
       const minutes = elapsed / 60;
       const wpm = minutes > 0 ? Math.round(correctCharsRef.current / 5 / minutes) : 0;
-      if (wpm >= 65) {
-        playWpmResultSound(wpm);
-      } else {
-        playCompleteSound();
-      }
+      playWpmResultSound(wpm);
     }
   }, [startTime]);
 
