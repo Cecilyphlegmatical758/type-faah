@@ -40,10 +40,29 @@ export default function Home() {
   const [correctChars, setCorrectChars] = useState(0);
   const [incorrectChars, setIncorrectChars] = useState(0);
   const [totalCharsTyped, setTotalCharsTyped] = useState(0);
+  const [liveWpm, setLiveWpm] = useState(0);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const soundEnabledRef = useRef(soundEnabled);
   soundEnabledRef.current = soundEnabled;
+
+  // Live WPM calculation
+  useEffect(() => {
+    if (gameState !== "running" || !startTime) {
+      setLiveWpm(0);
+      return;
+    }
+
+    const wpmInterval = setInterval(() => {
+      const elapsed = (Date.now() - startTime) / 1000;
+      const minutes = elapsed / 60;
+      if (minutes > 0) {
+        setLiveWpm(Math.round(correctChars / 5 / minutes));
+      }
+    }, 500);
+
+    return () => clearInterval(wpmInterval);
+  }, [gameState, startTime, correctChars]);
 
   // Apply theme
   useEffect(() => {
@@ -109,6 +128,7 @@ export default function Home() {
     setCorrectChars(0);
     setIncorrectChars(0);
     setTotalCharsTyped(0);
+    setLiveWpm(0);
     setPressedKeys(new Set());
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -342,6 +362,7 @@ export default function Home() {
             timeLeft={timeLeft}
             timerDuration={timerDuration}
             isRunning={gameState === "running"}
+            liveWpm={liveWpm}
           />
         )}
       </main>

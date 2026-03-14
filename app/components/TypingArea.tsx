@@ -12,6 +12,7 @@ interface TypingAreaProps {
   timeLeft: number | null;
   timerDuration: number;
   isRunning: boolean;
+  liveWpm: number;
 }
 
 export default function TypingArea({
@@ -24,6 +25,7 @@ export default function TypingArea({
   timeLeft,
   timerDuration,
   isRunning,
+  liveWpm,
 }: TypingAreaProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const activeWordRef = useRef<HTMLSpanElement>(null);
@@ -54,20 +56,44 @@ export default function TypingArea({
 
   return (
     <div className="relative w-full max-w-[860px] mx-auto">
-      {/* Timer display */}
-      {timerDuration > 0 && (
-        <div
-          className="text-5xl font-extralight mb-8 tracking-tight"
-          style={{
-            color: "var(--accent)",
-            fontFamily: "var(--font-geist-mono)",
-            opacity: isRunning ? 1 : 0.4,
-            transition: "opacity 0.3s ease",
-          }}
-        >
-          {timeLeft !== null ? timeLeft : timerDuration}
-        </div>
-      )}
+      {/* Timer + Live WPM display */}
+      <div className="flex items-end gap-6 mb-8">
+        {timerDuration > 0 && (
+          <div
+            className="text-5xl font-extralight tracking-tight tabular-nums"
+            style={{
+              color: "var(--accent)",
+              fontFamily: "var(--font-geist-mono)",
+              opacity: isRunning ? 1 : 0.4,
+              transition: "opacity 0.3s ease",
+            }}
+          >
+            {timeLeft !== null ? timeLeft : timerDuration}
+          </div>
+        )}
+        {isRunning && liveWpm > 0 && (
+          <div
+            className="flex items-baseline gap-1.5 pb-1.5 transition-opacity duration-500"
+            style={{ opacity: 0.5 }}
+          >
+            <span
+              className="text-2xl font-extralight tabular-nums"
+              style={{
+                color: "var(--text)",
+                fontFamily: "var(--font-geist-mono)",
+              }}
+            >
+              {liveWpm}
+            </span>
+            <span
+              className="text-[10px] uppercase tracking-[0.15em]"
+              style={{ color: "var(--text-dim)" }}
+            >
+              wpm
+            </span>
+          </div>
+        )}
+      </div>
 
       {/* Typing area */}
       <div
