@@ -70,15 +70,20 @@ export default function Results({
       {/* Restart */}
       <button
         onClick={onRestart}
-        className="group flex items-center gap-2.5 px-7 py-3 rounded-full text-[13px] font-medium tracking-wider transition-all duration-300 hover:scale-[1.05] active:scale-[0.96]"
-        style={{ color: "var(--accent)", border: "1px solid var(--border)" }}
+        className="group flex items-center gap-3 px-8 py-3.5 rounded-xl text-[14px] font-medium tracking-wide transition-all duration-300 hover:scale-[1.04] active:scale-[0.96]"
+        style={{
+          backgroundColor: "var(--bg-secondary)",
+          color: "var(--accent)",
+          border: "1px solid var(--border)",
+          boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
+        }}
       >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-500 group-hover:rotate-[-180deg]">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-500 group-hover:rotate-[-180deg]">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
         </svg>
-        restart
+        Restart Test
       </button>
-      <div className="mt-3 text-[10px] uppercase tracking-[0.25em]" style={{ color: "var(--text-dim)", opacity: 0.35 }}>
+      <div className="mt-3 text-[10px] uppercase tracking-[0.25em]" style={{ color: "var(--text-dim)", opacity: 0.3 }}>
         tab + enter
       </div>
     </div>

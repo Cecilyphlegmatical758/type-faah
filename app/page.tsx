@@ -229,13 +229,13 @@ export default function Home() {
           setCorrectChars((prev) => prev + 1);
         } else {
           setIncorrectChars((prev) => prev + 1);
-          // Play milestone mistake sounds at configurable thresholds
+          // Play mistake sounds every N errors (repeating)
           const newCount = incorrectCharsRef.current + 1;
           if (soundEnabledRef.current) {
-            if (mt1Ref.current > 0 && newCount === mt1Ref.current) {
-              playMistakeSound(5); // plays the first sound file
-            } else if (mt2Ref.current > 0 && newCount === mt2Ref.current) {
-              playMistakeSound(10); // plays the second sound file
+            if (mt2Ref.current > 0 && newCount % mt2Ref.current === 0) {
+              playMistakeSound(10);
+            } else if (mt1Ref.current > 0 && newCount % mt1Ref.current === 0) {
+              playMistakeSound(5);
             }
           }
         }
