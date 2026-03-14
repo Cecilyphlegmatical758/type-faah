@@ -76,14 +76,14 @@ export default function Header({
 
   return (
     <header className="px-10 py-5 w-full relative">
-      <div className="flex items-center justify-between max-w-[1300px] mx-auto">
+      <div className="flex items-center justify-center gap-6 mx-auto relative">
         {/* Logo */}
-        <div className="flex items-center gap-2.5 select-none min-w-[140px]">
+        <a href="/" className="flex items-center gap-2.5 select-none cursor-pointer no-underline">
           <span
             className="text-[22px] font-bold tracking-tight"
             style={{ color: "var(--accent)" }}
           >
-            bakchodi
+            Bakchodi
           </span>
           <span
             className="text-[22px] font-light"
@@ -95,12 +95,12 @@ export default function Header({
             className="text-[22px] font-light tracking-wide"
             style={{ color: "var(--text-dim)" }}
           >
-            type
+            Type
           </span>
-        </div>
+        </a>
 
         {/* Center: Theme dots + Timer */}
-        <div className="flex items-center gap-7">
+        <div className="flex items-center gap-5">
           {/* Theme dots */}
           <div className="flex items-center gap-[10px]">
             {themes.map((theme) => (
@@ -225,7 +225,7 @@ export default function Header({
         </div>
 
         {/* Right: Sound dropdown + mute */}
-        <div className="flex items-center gap-2 min-w-[180px] justify-end relative">
+        <div className="flex items-center gap-2 relative">
           {/* Sound profile dropdown trigger */}
           <button
             onClick={() => setShowSoundMenu((v) => !v)}

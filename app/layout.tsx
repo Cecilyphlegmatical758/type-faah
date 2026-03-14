@@ -13,7 +13,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bakchodi / type",
+  title: "Bakchodi / Type",
   description: "An aesthetic keyboard typing test",
   icons: {
     icon: "/favicon.png",
