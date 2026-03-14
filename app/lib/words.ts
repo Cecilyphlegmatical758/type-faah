@@ -116,29 +116,41 @@ const hindiWords = [
 // PUNJABI GAALIS
 // ═══════════════════════════════════════
 const punjabiWords = [
-  "penchod", "bhainchod", "terimaaki", "maachod", "laudeya",
-  "gashti", "kanjri", "khotey", "tattey", "kanjar",
-  "fuddi", "fuddiyan", "kuttiya", "gadheya", "sooar",
-  "painchoda", "maadarchoda", "bhaindiputtara", "tuttpaineya",
-  "ghanta", "kutti", "kuttey", "haraamda", "gandia",
-  "ghaseeta", "chootad", "ulludepatthe", "vella", "nikhattu",
-  "chhapri", "haramdi", "chootni", "phuddu",
-  "paaji", "badmaashi", "lulli", "khota", "kutteyda",
-  "bhaindiyan", "gandasa", "tattiyaan", "buddhu",
-  "lassanpatti", "guddi", "pendu", "jatt",
-  "kudiyan", "chootiya", "bhainsdiputtara",
-  "gaddhekitauli", "mundey", "bharvaad",
-  "giddha", "chhittar", "tuttiya", "phittey",
-  "phitteymunh", "udaari", "saddgaya",
-  "vaddiyan", "langotiya", "puttardiyan",
-  "saaliyan", "randva", "haramzaadi",
+  // Tier 1 - heaviest hitters, highest frequency
+  "penchod", "bhainchod", "maachod", "laudeya", "fuddi",
+  "penchod", "bhainchod", "maachod", "tattey", "kanjar",
+  "painchoda", "bhainchoda", "maadarchoda", "kutti", "kuttey",
+  // Core vulgar
+  "fuddu", "lun", "phuddi", "chootad", "tattey",
+  "gashti", "kanjri", "khotey", "sooar", "gadheya",
+  "lulli", "lulliyan", "fuddiyan", "tattiyaan",
+  // Aggressive combos
+  "terimaaki", "teripenchod", "terimaapenchod",
+  "tuttpaineya", "bhaindiputtara", "bhainsdiputtara",
+  "kuttekhasmanu", "sooarkiaulad", "kanjardimaa",
+  "gashtidikuri", "laudeyadiaal", "khotadimaa",
+  "gadheyadinasal", "chhapridimaa", "bhaindaputtar",
+  // Heavy insults
+  "haraamda", "haramdi", "haramzaadi", "bharvaad",
+  "chootiya", "chootni", "gandia", "gandiyamunda",
+  "ghaseeta", "randva", "ulludepatthe",
+  // Rage expressions
   "gaandvich", "fuddikhol", "tattebaj",
-  "khotadimaa", "sooardiaulad", "bhaindaputtar",
-  "kanjardimaa", "gashtidikuri", "laudeyadiaal",
-  "gandiyamunda", "nikhattupaaji", "vellaputtar",
-  "chhapridimaa", "penchoda", "bhainchoda",
-  "kuttekhasmanu", "sooarkiaulad", "gadheyadinasal",
-  "terimaapenchod", "teripenchod",
+  "gaandmarao", "lunlete", "fuddichato",
+  "tattevaddke", "penchododhobi", "bhainchoddiya",
+  "lundpaina", "fuddfaadni", "gaandtodna",
+  // Character attacks
+  "dalda", "chhapri", "vella", "nikhattu",
+  "khota", "ghanta", "buddhu", "phuddu",
+  // Combo insults
+  "kuttpenchod", "sooarbhainchod", "kanjarkhana",
+  "gashtighaar", "kanjriputtar", "kuttiyaadi",
+  "haramdapenchod", "lunphakkad", "fudduchoos",
+  "tattekhor", "bhainchodia", "penchodi",
+  // Intensified repeats for frequency
+  "penchod", "bhainchod", "maachod", "fuddi",
+  "painchoda", "laudeya", "tattey", "kanjar",
+  "gashti", "kanjri", "tuttpaineya", "haraamda",
 ];
 
 // ═══════════════════════════════════════
