@@ -69,6 +69,7 @@ export default function Header({
   onWordModeChange,
 }: HeaderProps) {
   const [showSoundMenu, setShowSoundMenu] = useState(false);
+  const [showAlertMenu, setShowAlertMenu] = useState(false);
 
   const currentProfileLabel =
     soundProfiles.find((p) => p.id === soundProfile)?.label ?? soundProfile;
@@ -316,66 +317,6 @@ export default function Header({
                   </button>
                 ))}
 
-                {/* Mistake alert thresholds */}
-                <div
-                  style={{
-                    borderTop: "1px solid var(--border)",
-                    padding: "12px 16px",
-                  }}
-                >
-                  <div
-                    className="text-[10px] uppercase tracking-[0.2em] font-medium mb-3"
-                    style={{ color: "var(--text-dim)" }}
-                  >
-                    Mistake alerts
-                  </div>
-                  <div className="flex flex-col gap-2.5">
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-[12px]" style={{ color: "var(--text-dim)" }}>
-                        Alert 1
-                      </span>
-                      <select
-                        value={mistakeThreshold1}
-                        onChange={(e) => onMistakeThreshold1Change(Number(e.target.value))}
-                        className="text-[12px] rounded-md px-2 py-1 cursor-pointer outline-none"
-                        style={{
-                          backgroundColor: "var(--bg-card)",
-                          color: "var(--text)",
-                          border: "1px solid var(--border)",
-                          minWidth: "60px",
-                        }}
-                      >
-                        {[3, 5, 7, 10, 15, 0].map((n) => (
-                          <option key={n} value={n}>
-                            {n === 0 ? "Off" : `${n} errors`}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-[12px]" style={{ color: "var(--text-dim)" }}>
-                        Alert 2
-                      </span>
-                      <select
-                        value={mistakeThreshold2}
-                        onChange={(e) => onMistakeThreshold2Change(Number(e.target.value))}
-                        className="text-[12px] rounded-md px-2 py-1 cursor-pointer outline-none"
-                        style={{
-                          backgroundColor: "var(--bg-card)",
-                          color: "var(--text)",
-                          border: "1px solid var(--border)",
-                          minWidth: "60px",
-                        }}
-                      >
-                        {[5, 10, 15, 20, 0].map((n) => (
-                          <option key={n} value={n}>
-                            {n === 0 ? "Off" : `${n} errors`}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
               </div>
             </>
           )}
@@ -408,6 +349,90 @@ export default function Header({
               </svg>
             )}
           </button>
+
+          {/* Mistake alerts button */}
+          <div className="relative">
+            <button
+              onClick={() => setShowAlertMenu((v) => !v)}
+              className="rounded-full transition-all duration-200 hover:scale-110 flex items-center justify-center"
+              style={{
+                width: "32px",
+                height: "32px",
+                color: (mistakeThreshold1 > 0 || mistakeThreshold2 > 0) ? "var(--accent)" : "var(--text-dim)",
+                backgroundColor: "transparent",
+              }}
+              title="Mistake alerts"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+            </button>
+
+            {showAlertMenu && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowAlertMenu(false)}
+                />
+                <div
+                  className="absolute top-full right-0 mt-2 z-50 rounded-xl"
+                  style={{
+                    backgroundColor: "var(--bg-secondary)",
+                    border: "1px solid var(--border)",
+                    boxShadow: "0 8px 30px rgba(0,0,0,0.35)",
+                    padding: "14px 16px",
+                    minWidth: "200px",
+                  }}
+                >
+                  <div
+                    className="text-[10px] uppercase tracking-[0.2em] font-medium mb-3"
+                    style={{ color: "var(--text-dim)" }}
+                  >
+                    Mistake alerts
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-[12px]" style={{ color: "var(--text)" }}>Alert 1</span>
+                      <select
+                        value={mistakeThreshold1}
+                        onChange={(e) => onMistakeThreshold1Change(Number(e.target.value))}
+                        className="text-[12px] rounded-lg px-2.5 py-1.5 cursor-pointer outline-none"
+                        style={{
+                          backgroundColor: "var(--bg-card)",
+                          color: "var(--text)",
+                          border: "1px solid var(--border)",
+                          minWidth: "80px",
+                        }}
+                      >
+                        {[3, 5, 7, 10, 15, 0].map((n) => (
+                          <option key={n} value={n}>{n === 0 ? "Off" : `${n} errors`}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-[12px]" style={{ color: "var(--text)" }}>Alert 2</span>
+                      <select
+                        value={mistakeThreshold2}
+                        onChange={(e) => onMistakeThreshold2Change(Number(e.target.value))}
+                        className="text-[12px] rounded-lg px-2.5 py-1.5 cursor-pointer outline-none"
+                        style={{
+                          backgroundColor: "var(--bg-card)",
+                          color: "var(--text)",
+                          border: "1px solid var(--border)",
+                          minWidth: "80px",
+                        }}
+                      >
+                        {[5, 10, 15, 20, 0].map((n) => (
+                          <option key={n} value={n}>{n === 0 ? "Off" : `${n} errors`}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </header>

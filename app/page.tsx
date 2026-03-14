@@ -25,11 +25,11 @@ export default function Home() {
   const [soundProfile, setSoundProfile] = useState<SoundProfile>("thock");
   const [mistakeThreshold1, setMistakeThreshold1] = useState(5);
   const [mistakeThreshold2, setMistakeThreshold2] = useState(10);
-  const [wordMode, setWordMode] = useState<WordMode>("normal");
+  const [wordMode, setWordMode] = useState<WordMode>("curse");
 
   // Game state
   const [gameState, setGameState] = useState<GameState>("idle");
-  const [words, setWords] = useState<string[]>(() => generateWords(200, "normal"));
+  const [words, setWords] = useState<string[]>(() => generateWords(200, "curse"));
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [typedChars, setTypedChars] = useState<TypedChar[][]>([]);
