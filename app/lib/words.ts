@@ -103,6 +103,13 @@ const hindiWords = [
   "dhakkan", "panauti", "duffer", "chamcha",
   "saali", "kamini", "saand", "bhains",
   "taklu", "motu", "langda", "bigda",
+  // Fun compound gaalis
+  "chutpaglu", "lundtopa", "bhosadchod",
+  "gaandulala", "laudalassan", "chutkulund",
+  "bhosdabandhar", "tattufakeer", "jhantumama",
+  "gaandchor", "lundpakoda", "chutputra",
+  "bhosdacharya", "laudawala", "gaandumal",
+  "chutbandhar", "tattulal", "jhantudas",
 ];
 
 // ═══════════════════════════════════════
