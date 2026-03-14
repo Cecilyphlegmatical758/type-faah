@@ -325,6 +325,30 @@ export function playMistakeSoundByIndex(index: number) {
   } catch { /* */ }
 }
 
+// WPM result sounds
+let wpmAbove80Audio: HTMLAudioElement | null = null;
+let wpm65to80Audio: HTMLAudioElement | null = null;
+
+export function playWpmResultSound(wpm: number) {
+  try {
+    if (wpm > 80) {
+      if (!wpmAbove80Audio) {
+        wpmAbove80Audio = new Audio("/sounds/wpm-above-80.mp3");
+        wpmAbove80Audio.volume = 0.8;
+      }
+      wpmAbove80Audio.currentTime = 0;
+      wpmAbove80Audio.play();
+    } else if (wpm >= 65) {
+      if (!wpm65to80Audio) {
+        wpm65to80Audio = new Audio("/sounds/wpm-65-80.mp3");
+        wpm65to80Audio.volume = 0.8;
+      }
+      wpm65to80Audio.currentTime = 0;
+      wpm65to80Audio.play();
+    }
+  } catch { /* */ }
+}
+
 export function playCompleteSound() {
   try {
     const c = ctx(); const now = c.currentTime;

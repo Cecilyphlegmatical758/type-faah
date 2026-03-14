@@ -7,7 +7,7 @@ import Keyboard from "./components/Keyboard";
 import Results from "./components/Results";
 import { generateWords } from "./lib/words";
 import type { WordMode } from "./lib/words";
-import { playKeySound, playSpaceSound, playCompleteSound, playMistakeSoundByIndex } from "./lib/sounds";
+import { playKeySound, playSpaceSound, playCompleteSound, playMistakeSoundByIndex, playWpmResultSound } from "./lib/sounds";
 import type { SoundProfile } from "./lib/sounds";
 
 type GameState = "idle" | "running" | "finished";
@@ -116,15 +116,27 @@ export default function Home() {
   }, [gameState, timerDuration]);
 
   const finishGame = useCallback(() => {
+    const now = Date.now();
     setGameState("finished");
-    setEndTime(Date.now());
+    setEndTime(now);
     setIsFocused(false);
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
-    if (soundEnabledRef.current) playCompleteSound();
-  }, []);
+    if (soundEnabledRef.current) {
+      // Calculate WPM to decide which result sound to play
+      const startT = startTime || now;
+      const elapsed = (now - startT) / 1000;
+      const minutes = elapsed / 60;
+      const wpm = minutes > 0 ? Math.round(correctCharsRef.current / 5 / minutes) : 0;
+      if (wpm >= 65) {
+        playWpmResultSound(wpm);
+      } else {
+        playCompleteSound();
+      }
+    }
+  }, [startTime]);
 
   const startGame = useCallback(() => {
     setGameState("running");
