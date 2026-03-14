@@ -22,6 +22,8 @@ export default function Home() {
   const [timerDuration, setTimerDuration] = useState(30);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [soundProfile, setSoundProfile] = useState<SoundProfile>("thock");
+  const [mistakeThreshold1, setMistakeThreshold1] = useState(5);
+  const [mistakeThreshold2, setMistakeThreshold2] = useState(10);
 
   // Game state
   const [gameState, setGameState] = useState<GameState>("idle");
@@ -53,6 +55,10 @@ export default function Home() {
   correctCharsRef.current = correctChars;
   const incorrectCharsRef = useRef(incorrectChars);
   incorrectCharsRef.current = incorrectChars;
+  const mt1Ref = useRef(mistakeThreshold1);
+  mt1Ref.current = mistakeThreshold1;
+  const mt2Ref = useRef(mistakeThreshold2);
+  mt2Ref.current = mistakeThreshold2;
 
   // Live WPM calculation
   useEffect(() => {
@@ -223,10 +229,14 @@ export default function Home() {
           setCorrectChars((prev) => prev + 1);
         } else {
           setIncorrectChars((prev) => prev + 1);
-          // Play milestone mistake sounds at 5 and 10 errors
+          // Play milestone mistake sounds at configurable thresholds
           const newCount = incorrectCharsRef.current + 1;
-          if (soundEnabledRef.current && (newCount === 5 || newCount === 10)) {
-            playMistakeSound(newCount);
+          if (soundEnabledRef.current) {
+            if (mt1Ref.current > 0 && newCount === mt1Ref.current) {
+              playMistakeSound(5); // plays the first sound file
+            } else if (mt2Ref.current > 0 && newCount === mt2Ref.current) {
+              playMistakeSound(10); // plays the second sound file
+            }
           }
         }
         setTotalCharsTyped((prev) => prev + 1);
@@ -348,6 +358,10 @@ export default function Home() {
         onSoundToggle={() => setSoundEnabled((prev) => !prev)}
         soundProfile={soundProfile}
         onSoundProfileChange={setSoundProfile}
+        mistakeThreshold1={mistakeThreshold1}
+        mistakeThreshold2={mistakeThreshold2}
+        onMistakeThreshold1Change={setMistakeThreshold1}
+        onMistakeThreshold2Change={setMistakeThreshold2}
       />
 
       <main className="flex-1 flex flex-col items-center justify-center px-8">

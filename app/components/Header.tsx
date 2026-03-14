@@ -42,6 +42,10 @@ interface HeaderProps {
   onSoundToggle: () => void;
   soundProfile: SoundProfile;
   onSoundProfileChange: (profile: SoundProfile) => void;
+  mistakeThreshold1: number;
+  mistakeThreshold2: number;
+  onMistakeThreshold1Change: (v: number) => void;
+  onMistakeThreshold2Change: (v: number) => void;
 }
 
 export default function Header({
@@ -54,6 +58,10 @@ export default function Header({
   onSoundToggle,
   soundProfile,
   onSoundProfileChange,
+  mistakeThreshold1,
+  mistakeThreshold2,
+  onMistakeThreshold1Change,
+  onMistakeThreshold2Change,
 }: HeaderProps) {
   const [showSoundMenu, setShowSoundMenu] = useState(false);
 
@@ -267,6 +275,67 @@ export default function Header({
                     {p.label}
                   </button>
                 ))}
+
+                {/* Mistake alert thresholds */}
+                <div
+                  style={{
+                    borderTop: "1px solid var(--border)",
+                    padding: "12px 16px",
+                  }}
+                >
+                  <div
+                    className="text-[10px] uppercase tracking-[0.2em] font-medium mb-3"
+                    style={{ color: "var(--text-dim)" }}
+                  >
+                    Mistake alerts
+                  </div>
+                  <div className="flex flex-col gap-2.5">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-[12px]" style={{ color: "var(--text-dim)" }}>
+                        Alert 1
+                      </span>
+                      <select
+                        value={mistakeThreshold1}
+                        onChange={(e) => onMistakeThreshold1Change(Number(e.target.value))}
+                        className="text-[12px] rounded-md px-2 py-1 cursor-pointer outline-none"
+                        style={{
+                          backgroundColor: "var(--bg-card)",
+                          color: "var(--text)",
+                          border: "1px solid var(--border)",
+                          minWidth: "60px",
+                        }}
+                      >
+                        {[3, 5, 7, 10, 15, 0].map((n) => (
+                          <option key={n} value={n}>
+                            {n === 0 ? "Off" : `${n} errors`}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-[12px]" style={{ color: "var(--text-dim)" }}>
+                        Alert 2
+                      </span>
+                      <select
+                        value={mistakeThreshold2}
+                        onChange={(e) => onMistakeThreshold2Change(Number(e.target.value))}
+                        className="text-[12px] rounded-md px-2 py-1 cursor-pointer outline-none"
+                        style={{
+                          backgroundColor: "var(--bg-card)",
+                          color: "var(--text)",
+                          border: "1px solid var(--border)",
+                          minWidth: "60px",
+                        }}
+                      >
+                        {[5, 10, 15, 20, 0].map((n) => (
+                          <option key={n} value={n}>
+                            {n === 0 ? "Off" : `${n} errors`}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
               </div>
             </>
           )}
