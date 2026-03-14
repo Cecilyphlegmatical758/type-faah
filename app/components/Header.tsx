@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import type { SoundProfile } from "../lib/sounds";
 
 const themes = [
@@ -14,9 +14,13 @@ const themes = [
 
 const timerOptions = [15, 30, 60, 120];
 
-const soundProfiles: { id: SoundProfile; label: string; desc: string }[] = [
-  { id: "lubed", label: "Lubed", desc: "Soft, buttery linears" },
-  { id: "blue", label: "Blue", desc: "Clicky, tactile switches" },
+const soundProfiles: { id: SoundProfile; label: string }[] = [
+  { id: "lubed", label: "Lubed Linears" },
+  { id: "blue", label: "Cherry Blue" },
+  { id: "brown", label: "Cherry Brown" },
+  { id: "red", label: "Cherry Red" },
+  { id: "topre", label: "Topre" },
+  { id: "membrane", label: "Membrane" },
 ];
 
 interface HeaderProps {
@@ -42,8 +46,13 @@ export default function Header({
   soundProfile,
   onSoundProfileChange,
 }: HeaderProps) {
+  const [showSoundMenu, setShowSoundMenu] = useState(false);
+
+  const currentProfileLabel =
+    soundProfiles.find((p) => p.id === soundProfile)?.label ?? soundProfile;
+
   return (
-    <header className="px-10 py-6 w-full">
+    <header className="px-10 py-6 w-full relative">
       <div className="flex items-center justify-between max-w-[1300px] mx-auto">
         {/* Logo */}
         <div className="flex items-center gap-2.5 select-none min-w-[140px]">
@@ -67,59 +76,57 @@ export default function Header({
           </span>
         </div>
 
-        {/* Center controls */}
-        <div className="flex items-center gap-5">
+        {/* Center: Theme dots + Timer */}
+        <div className="flex items-center gap-7">
           {/* Theme dots */}
-          <div className="flex items-center gap-[8px]">
+          <div className="flex items-center gap-[10px]">
             {themes.map((theme) => (
               <button
                 key={theme.id}
                 onClick={() => onThemeChange(theme.id)}
-                className="w-[16px] h-[16px] rounded-full transition-all duration-300 hover:scale-[1.3] focus:outline-none"
+                className="w-[14px] h-[14px] rounded-full transition-all duration-300 hover:scale-[1.4] focus:outline-none"
                 style={{
                   backgroundColor: theme.color,
                   boxShadow:
                     currentTheme === theme.id
-                      ? `0 0 0 2.5px var(--bg), 0 0 0 4px ${theme.color}`
+                      ? `0 0 0 2px var(--bg), 0 0 0 3.5px ${theme.color}`
                       : "none",
-                  opacity: currentTheme === theme.id ? 1 : 0.6,
+                  opacity: currentTheme === theme.id ? 1 : 0.55,
                 }}
                 title={theme.label}
-                aria-label={`Switch to ${theme.label} theme`}
               />
             ))}
           </div>
 
-          {/* Divider */}
+          {/* Timer pills */}
           <div
-            className="w-px h-4"
-            style={{ backgroundColor: "var(--border)", opacity: 0.3 }}
-          />
-
-          {/* Timer selector */}
-          <div
-            className="flex items-center rounded-full px-[5px] py-[4px] gap-[3px]"
-            style={{ backgroundColor: "var(--bg-secondary)" }}
+            className="flex items-center rounded-full"
+            style={{
+              backgroundColor: "var(--bg-secondary)",
+              padding: "4px 5px",
+              gap: "2px",
+            }}
           >
             {timerOptions.map((time) => (
               <button
                 key={time}
                 onClick={() => !isRunning && onTimerChange(time)}
-                className={`px-[14px] py-[6px] rounded-full text-[13px] font-medium transition-all duration-200 ${
-                  isRunning
-                    ? "cursor-default opacity-50"
-                    : "cursor-pointer hover:opacity-90"
-                }`}
+                className="transition-all duration-200"
                 style={{
+                  padding: "5px 16px",
+                  borderRadius: "20px",
+                  fontSize: "13px",
+                  fontWeight: 500,
                   backgroundColor:
                     currentTimer === time ? "var(--bg-card)" : "transparent",
                   color:
                     currentTimer === time ? "var(--accent)" : "var(--text-dim)",
                   boxShadow:
                     currentTimer === time
-                      ? "0 1px 4px rgba(0,0,0,0.25)"
+                      ? "0 1px 4px rgba(0,0,0,0.3)"
                       : "none",
-                  opacity: currentTimer === time ? 1 : undefined,
+                  opacity: isRunning && currentTimer !== time ? 0.4 : 1,
+                  cursor: isRunning ? "default" : "pointer",
                 }}
                 disabled={isRunning}
               >
@@ -128,21 +135,22 @@ export default function Header({
             ))}
             <button
               onClick={() => !isRunning && onTimerChange(0)}
-              className={`px-[14px] py-[6px] rounded-full text-[15px] font-medium transition-all duration-200 ${
-                isRunning
-                  ? "cursor-default opacity-50"
-                  : "cursor-pointer hover:opacity-90"
-              }`}
+              className="transition-all duration-200"
               style={{
+                padding: "5px 14px",
+                borderRadius: "20px",
+                fontSize: "16px",
+                fontWeight: 500,
                 backgroundColor:
                   currentTimer === 0 ? "var(--bg-card)" : "transparent",
                 color:
                   currentTimer === 0 ? "var(--accent)" : "var(--text-dim)",
                 boxShadow:
                   currentTimer === 0
-                    ? "0 1px 4px rgba(0,0,0,0.25)"
+                    ? "0 1px 4px rgba(0,0,0,0.3)"
                     : "none",
-                opacity: currentTimer === 0 ? 1 : undefined,
+                opacity: isRunning && currentTimer !== 0 ? 0.4 : 1,
+                cursor: isRunning ? "default" : "pointer",
               }}
               disabled={isRunning}
             >
@@ -151,75 +159,131 @@ export default function Header({
           </div>
         </div>
 
-        {/* Right: Sound controls */}
-        <div className="flex items-center gap-3 min-w-[140px] justify-end">
-          {/* Sound profile pills */}
-          <div
-            className="flex items-center rounded-full px-[4px] py-[3px] gap-[2px]"
-            style={{ backgroundColor: "var(--bg-secondary)" }}
+        {/* Right: Sound dropdown + mute */}
+        <div className="flex items-center gap-2 min-w-[180px] justify-end relative">
+          {/* Sound profile dropdown trigger */}
+          <button
+            onClick={() => setShowSoundMenu((v) => !v)}
+            className="flex items-center gap-2 rounded-full transition-all duration-200 cursor-pointer hover:opacity-80"
+            style={{
+              padding: "6px 14px 6px 12px",
+              backgroundColor: "var(--bg-secondary)",
+              color: "var(--text-dim)",
+              fontSize: "12px",
+              fontWeight: 500,
+              letterSpacing: "0.03em",
+            }}
           >
-            {soundProfiles.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => onSoundProfileChange(p.id)}
-                className="px-[12px] py-[5px] rounded-full text-[11px] font-medium tracking-wide transition-all duration-200 cursor-pointer"
-                style={{
-                  backgroundColor:
-                    soundProfile === p.id ? "var(--bg-card)" : "transparent",
-                  color:
-                    soundProfile === p.id
-                      ? "var(--accent)"
-                      : "var(--text-dim)",
-                  boxShadow:
-                    soundProfile === p.id
-                      ? "0 1px 4px rgba(0,0,0,0.25)"
-                      : "none",
-                }}
-                title={p.desc}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ opacity: 0.6 }}
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+            </svg>
+            {currentProfileLabel}
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              style={{
+                opacity: 0.4,
+                transform: showSoundMenu ? "rotate(180deg)" : "rotate(0)",
+                transition: "transform 0.2s ease",
+              }}
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
 
-          {/* Sound on/off */}
+          {/* Sound dropdown menu */}
+          {showSoundMenu && (
+            <>
+              {/* Backdrop to close */}
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setShowSoundMenu(false)}
+              />
+              <div
+                className="absolute top-full right-0 mt-2 z-50 rounded-xl overflow-hidden"
+                style={{
+                  backgroundColor: "var(--bg-secondary)",
+                  border: "1px solid var(--border)",
+                  boxShadow: "0 8px 30px rgba(0,0,0,0.35)",
+                  minWidth: "180px",
+                }}
+              >
+                {soundProfiles.map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => {
+                      onSoundProfileChange(p.id);
+                      setShowSoundMenu(false);
+                    }}
+                    className="w-full text-left transition-all duration-150 cursor-pointer"
+                    style={{
+                      padding: "10px 16px",
+                      fontSize: "13px",
+                      fontWeight: soundProfile === p.id ? 600 : 400,
+                      color:
+                        soundProfile === p.id
+                          ? "var(--accent)"
+                          : "var(--text)",
+                      backgroundColor:
+                        soundProfile === p.id
+                          ? "rgba(255,255,255,0.04)"
+                          : "transparent",
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.target as HTMLElement).style.backgroundColor =
+                        "rgba(255,255,255,0.06)";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.target as HTMLElement).style.backgroundColor =
+                        soundProfile === p.id
+                          ? "rgba(255,255,255,0.04)"
+                          : "transparent";
+                    }}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* Mute toggle */}
           <button
             onClick={onSoundToggle}
-            className="p-[6px] rounded-full transition-all duration-200 hover:scale-110"
+            className="rounded-full transition-all duration-200 hover:scale-110 flex items-center justify-center"
             style={{
+              width: "32px",
+              height: "32px",
               color: soundEnabled ? "var(--accent)" : "var(--text-dim)",
               backgroundColor: soundEnabled
                 ? "transparent"
                 : "var(--bg-secondary)",
             }}
-            title={soundEnabled ? "Sound on" : "Sound off"}
+            title={soundEnabled ? "Mute" : "Unmute"}
           >
             {soundEnabled ? (
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                 <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                 <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
               </svg>
             ) : (
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                 <line x1="23" y1="9" x2="17" y2="15" />
                 <line x1="17" y1="9" x2="23" y2="15" />

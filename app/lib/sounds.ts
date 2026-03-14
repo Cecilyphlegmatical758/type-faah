@@ -1,4 +1,4 @@
-export type SoundProfile = "lubed" | "blue";
+export type SoundProfile = "lubed" | "blue" | "brown" | "red" | "topre" | "membrane";
 
 let audioContext: AudioContext | null = null;
 
@@ -389,33 +389,295 @@ function playBlueSpace(ctx: AudioContext) {
 }
 
 // ─────────────────────────────────────────────
+// CHERRY MX BROWN - tactile bump, no click
+// Softer than blue, has a subtle bump feel
+// ─────────────────────────────────────────────
+
+function playBrownKey(ctx: AudioContext, isCorrect: boolean) {
+  const now = ctx.currentTime;
+  const pitch = 0.94 + Math.random() * 0.12;
+  const vol = 0.9 + Math.random() * 0.1;
+
+  // Tactile bump - softer than blue, more like a dull tick
+  const bumpSrc = ctx.createBufferSource();
+  bumpSrc.buffer = getNoiseBuffer(ctx);
+  const bumpBP = ctx.createBiquadFilter();
+  bumpBP.type = "bandpass";
+  bumpBP.frequency.setValueAtTime(2200 * pitch, now);
+  bumpBP.Q.setValueAtTime(2, now);
+  const bumpGain = ctx.createGain();
+  bumpGain.gain.setValueAtTime(0.1 * vol, now);
+  bumpGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+  bumpSrc.connect(bumpBP);
+  bumpBP.connect(bumpGain);
+  bumpGain.connect(ctx.destination);
+  bumpSrc.start(now);
+  bumpSrc.stop(now + 0.025);
+
+  // Bottom-out thud
+  const thudSrc = ctx.createBufferSource();
+  thudSrc.buffer = getNoiseBuffer(ctx);
+  const thudLP = ctx.createBiquadFilter();
+  thudLP.type = "lowpass";
+  thudLP.frequency.setValueAtTime(800 * pitch, now + 0.006);
+  thudLP.Q.setValueAtTime(0.8, now);
+  thudLP.frequency.exponentialRampToValueAtTime(250, now + 0.05);
+  const thudGain = ctx.createGain();
+  thudGain.gain.setValueAtTime(0.11 * vol, now + 0.005);
+  thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+  thudSrc.connect(thudLP);
+  thudLP.connect(thudGain);
+  thudGain.connect(ctx.destination);
+  thudSrc.start(now);
+  thudSrc.stop(now + 0.06);
+
+  // Case resonance
+  const caseSrc = ctx.createBufferSource();
+  caseSrc.buffer = getNoiseBuffer(ctx);
+  const caseLP = ctx.createBiquadFilter();
+  caseLP.type = "lowpass";
+  caseLP.frequency.setValueAtTime(280, now);
+  caseLP.Q.setValueAtTime(1.5, now);
+  const caseGain = ctx.createGain();
+  caseGain.gain.setValueAtTime(0.06 * vol, now);
+  caseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+  caseSrc.connect(caseLP);
+  caseLP.connect(caseGain);
+  caseGain.connect(ctx.destination);
+  caseSrc.start(now);
+  caseSrc.stop(now + 0.055);
+
+  if (!isCorrect) {
+    const e = ctx.createOscillator(); const eg = ctx.createGain();
+    e.type = "sine"; e.frequency.setValueAtTime(200, now);
+    eg.gain.setValueAtTime(0.04, now); eg.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+    e.connect(eg); eg.connect(ctx.destination); e.start(now); e.stop(now + 0.08);
+  }
+}
+
+function playBrownSpace(ctx: AudioContext) {
+  const now = ctx.currentTime;
+  const vol = 0.9 + Math.random() * 0.1;
+  // Deeper bump
+  const bSrc = ctx.createBufferSource(); bSrc.buffer = getNoiseBuffer(ctx);
+  const bBP = ctx.createBiquadFilter(); bBP.type = "bandpass"; bBP.frequency.setValueAtTime(1600, now); bBP.Q.setValueAtTime(1.5, now);
+  const bG = ctx.createGain(); bG.gain.setValueAtTime(0.08 * vol, now); bG.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+  bSrc.connect(bBP); bBP.connect(bG); bG.connect(ctx.destination); bSrc.start(now); bSrc.stop(now + 0.03);
+  // Thud
+  const tSrc = ctx.createBufferSource(); tSrc.buffer = getNoiseBuffer(ctx);
+  const tLP = ctx.createBiquadFilter(); tLP.type = "lowpass"; tLP.frequency.setValueAtTime(500, now); tLP.Q.setValueAtTime(1.2, now);
+  tLP.frequency.exponentialRampToValueAtTime(140, now + 0.06);
+  const tG = ctx.createGain(); tG.gain.setValueAtTime(0.14 * vol, now); tG.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+  tSrc.connect(tLP); tLP.connect(tG); tG.connect(ctx.destination); tSrc.start(now); tSrc.stop(now + 0.085);
+}
+
+// ─────────────────────────────────────────────
+// CHERRY MX RED - linear, no bump, no click
+// Similar to lubed but slightly scratchier/louder
+// ─────────────────────────────────────────────
+
+function playRedKey(ctx: AudioContext, isCorrect: boolean) {
+  const now = ctx.currentTime;
+  const pitch = 0.93 + Math.random() * 0.14;
+  const vol = 0.9 + Math.random() * 0.1;
+
+  // Bottom-out - louder than lubed, less dampened
+  const popSrc = ctx.createBufferSource(); popSrc.buffer = getNoiseBuffer(ctx);
+  const popLP = ctx.createBiquadFilter(); popLP.type = "lowpass";
+  popLP.frequency.setValueAtTime(900 * pitch, now); popLP.Q.setValueAtTime(0.6, now);
+  popLP.frequency.exponentialRampToValueAtTime(280, now + 0.04);
+  const popG = ctx.createGain(); popG.gain.setValueAtTime(0.11 * vol, now);
+  popG.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+  popSrc.connect(popLP); popLP.connect(popG); popG.connect(ctx.destination);
+  popSrc.start(now); popSrc.stop(now + 0.055);
+
+  // Scratch/contact noise - reds are slightly scratchy unlubed
+  const scrSrc = ctx.createBufferSource(); scrSrc.buffer = getNoiseBuffer(ctx);
+  const scrBP = ctx.createBiquadFilter(); scrBP.type = "bandpass";
+  scrBP.frequency.setValueAtTime(1800 * pitch, now); scrBP.Q.setValueAtTime(1.5, now);
+  const scrG = ctx.createGain(); scrG.gain.setValueAtTime(0.04 * vol, now);
+  scrG.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+  scrSrc.connect(scrBP); scrBP.connect(scrG); scrG.connect(ctx.destination);
+  scrSrc.start(now); scrSrc.stop(now + 0.025);
+
+  // Case thump
+  const cSrc = ctx.createBufferSource(); cSrc.buffer = getNoiseBuffer(ctx);
+  const cLP = ctx.createBiquadFilter(); cLP.type = "lowpass";
+  cLP.frequency.setValueAtTime(200, now); cLP.Q.setValueAtTime(1.8, now);
+  const cG = ctx.createGain(); cG.gain.setValueAtTime(0.07 * vol, now);
+  cG.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+  cSrc.connect(cLP); cLP.connect(cG); cG.connect(ctx.destination);
+  cSrc.start(now); cSrc.stop(now + 0.055);
+
+  // Spring ping
+  const spOsc = ctx.createOscillator(); spOsc.type = "sine";
+  spOsc.frequency.setValueAtTime(3200 * pitch, now);
+  spOsc.frequency.exponentialRampToValueAtTime(2600, now + 0.04);
+  const spG = ctx.createGain(); spG.gain.setValueAtTime(0.008 * vol, now);
+  spG.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+  spOsc.connect(spG); spG.connect(ctx.destination); spOsc.start(now); spOsc.stop(now + 0.045);
+
+  if (!isCorrect) {
+    const e = ctx.createOscillator(); const eg = ctx.createGain();
+    e.type = "sine"; e.frequency.setValueAtTime(200, now);
+    eg.gain.setValueAtTime(0.035, now); eg.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+    e.connect(eg); eg.connect(ctx.destination); e.start(now); e.stop(now + 0.07);
+  }
+}
+
+function playRedSpace(ctx: AudioContext) {
+  const now = ctx.currentTime;
+  const vol = 0.9 + Math.random() * 0.1;
+  const pSrc = ctx.createBufferSource(); pSrc.buffer = getNoiseBuffer(ctx);
+  const pLP = ctx.createBiquadFilter(); pLP.type = "lowpass";
+  pLP.frequency.setValueAtTime(600, now); pLP.Q.setValueAtTime(0.8, now);
+  pLP.frequency.exponentialRampToValueAtTime(160, now + 0.06);
+  const pG = ctx.createGain(); pG.gain.setValueAtTime(0.14 * vol, now);
+  pG.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+  pSrc.connect(pLP); pLP.connect(pG); pG.connect(ctx.destination);
+  pSrc.start(now); pSrc.stop(now + 0.085);
+  // Sub
+  const sSrc = ctx.createBufferSource(); sSrc.buffer = getNoiseBuffer(ctx);
+  const sLP = ctx.createBiquadFilter(); sLP.type = "lowpass"; sLP.frequency.setValueAtTime(150, now); sLP.Q.setValueAtTime(2, now);
+  const sG = ctx.createGain(); sG.gain.setValueAtTime(0.09 * vol, now); sG.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+  sSrc.connect(sLP); sLP.connect(sG); sG.connect(ctx.destination); sSrc.start(now); sSrc.stop(now + 0.075);
+}
+
+// ─────────────────────────────────────────────
+// TOPRE - electrostatic capacitive rubber dome
+// Distinctive "thock" + "clack" - deep, round,
+// very clean with almost no rattle
+// ─────────────────────────────────────────────
+
+function playTopreKey(ctx: AudioContext, isCorrect: boolean) {
+  const now = ctx.currentTime;
+  const pitch = 0.95 + Math.random() * 0.1;
+  const vol = 0.9 + Math.random() * 0.1;
+
+  // The "clack" - Topre has a distinctive mid-high clack
+  const clkSrc = ctx.createBufferSource(); clkSrc.buffer = getNoiseBuffer(ctx);
+  const clkBP = ctx.createBiquadFilter(); clkBP.type = "bandpass";
+  clkBP.frequency.setValueAtTime(1600 * pitch, now); clkBP.Q.setValueAtTime(3, now);
+  const clkG = ctx.createGain(); clkG.gain.setValueAtTime(0.12 * vol, now);
+  clkG.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+  clkSrc.connect(clkBP); clkBP.connect(clkG); clkG.connect(ctx.destination);
+  clkSrc.start(now); clkSrc.stop(now + 0.03);
+
+  // The deep "thock" body - Topre is famous for this
+  const thkSrc = ctx.createBufferSource(); thkSrc.buffer = getNoiseBuffer(ctx);
+  const thkLP = ctx.createBiquadFilter(); thkLP.type = "lowpass";
+  thkLP.frequency.setValueAtTime(500 * pitch, now); thkLP.Q.setValueAtTime(1.8, now);
+  thkLP.frequency.exponentialRampToValueAtTime(150, now + 0.05);
+  const thkG = ctx.createGain(); thkG.gain.setValueAtTime(0.13 * vol, now);
+  thkG.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+  thkSrc.connect(thkLP); thkLP.connect(thkG); thkG.connect(ctx.destination);
+  thkSrc.start(now); thkSrc.stop(now + 0.065);
+
+  // Dome snap - rubber dome collapsing has a unique character
+  const dOsc = ctx.createOscillator(); dOsc.type = "sine";
+  dOsc.frequency.setValueAtTime(800 * pitch, now);
+  dOsc.frequency.exponentialRampToValueAtTime(200, now + 0.015);
+  const dG = ctx.createGain(); dG.gain.setValueAtTime(0.04 * vol, now);
+  dG.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+  dOsc.connect(dG); dG.connect(ctx.destination); dOsc.start(now); dOsc.stop(now + 0.025);
+
+  if (!isCorrect) {
+    const e = ctx.createBufferSource(); e.buffer = getNoiseBuffer(ctx);
+    const eBP = ctx.createBiquadFilter(); eBP.type = "bandpass"; eBP.frequency.setValueAtTime(280, now); eBP.Q.setValueAtTime(2, now);
+    const eG = ctx.createGain(); eG.gain.setValueAtTime(0.04, now); eG.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+    e.connect(eBP); eBP.connect(eG); eG.connect(ctx.destination); e.start(now); e.stop(now + 0.085);
+  }
+}
+
+function playTopreSpace(ctx: AudioContext) {
+  const now = ctx.currentTime; const vol = 0.9 + Math.random() * 0.1;
+  // Deeper clack
+  const cSrc = ctx.createBufferSource(); cSrc.buffer = getNoiseBuffer(ctx);
+  const cBP = ctx.createBiquadFilter(); cBP.type = "bandpass"; cBP.frequency.setValueAtTime(1200, now); cBP.Q.setValueAtTime(2.5, now);
+  const cG = ctx.createGain(); cG.gain.setValueAtTime(0.1 * vol, now); cG.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+  cSrc.connect(cBP); cBP.connect(cG); cG.connect(ctx.destination); cSrc.start(now); cSrc.stop(now + 0.035);
+  // Deep thock
+  const tSrc = ctx.createBufferSource(); tSrc.buffer = getNoiseBuffer(ctx);
+  const tLP = ctx.createBiquadFilter(); tLP.type = "lowpass"; tLP.frequency.setValueAtTime(350, now); tLP.Q.setValueAtTime(2.2, now);
+  tLP.frequency.exponentialRampToValueAtTime(100, now + 0.06);
+  const tG = ctx.createGain(); tG.gain.setValueAtTime(0.15 * vol, now); tG.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+  tSrc.connect(tLP); tLP.connect(tG); tG.connect(ctx.destination); tSrc.start(now); tSrc.stop(now + 0.085);
+}
+
+// ─────────────────────────────────────────────
+// MEMBRANE - mushy, dull, no tactile feedback
+// Very muted, mostly low-freq, rubbery
+// ─────────────────────────────────────────────
+
+function playMembraneKey(ctx: AudioContext, isCorrect: boolean) {
+  const now = ctx.currentTime;
+  const pitch = 0.9 + Math.random() * 0.2;
+  const vol = 0.85 + Math.random() * 0.15;
+
+  // Mushy thud - very low-passed, dull
+  const mSrc = ctx.createBufferSource(); mSrc.buffer = getNoiseBuffer(ctx);
+  const mLP = ctx.createBiquadFilter(); mLP.type = "lowpass";
+  mLP.frequency.setValueAtTime(400 * pitch, now); mLP.Q.setValueAtTime(0.5, now);
+  mLP.frequency.exponentialRampToValueAtTime(100, now + 0.05);
+  const mG = ctx.createGain(); mG.gain.setValueAtTime(0.1 * vol, now);
+  mG.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+  mSrc.connect(mLP); mLP.connect(mG); mG.connect(ctx.destination);
+  mSrc.start(now); mSrc.stop(now + 0.065);
+
+  // Rubber dome squish - very quiet mid
+  const rSrc = ctx.createBufferSource(); rSrc.buffer = getNoiseBuffer(ctx);
+  const rBP = ctx.createBiquadFilter(); rBP.type = "bandpass";
+  rBP.frequency.setValueAtTime(700 * pitch, now); rBP.Q.setValueAtTime(1, now);
+  const rG = ctx.createGain(); rG.gain.setValueAtTime(0.04 * vol, now);
+  rG.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+  rSrc.connect(rBP); rBP.connect(rG); rG.connect(ctx.destination);
+  rSrc.start(now); rSrc.stop(now + 0.035);
+
+  if (!isCorrect) {
+    const e = ctx.createOscillator(); const eg = ctx.createGain();
+    e.type = "sine"; e.frequency.setValueAtTime(160, now);
+    eg.gain.setValueAtTime(0.03, now); eg.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+    e.connect(eg); eg.connect(ctx.destination); e.start(now); e.stop(now + 0.07);
+  }
+}
+
+function playMembraneSpace(ctx: AudioContext) {
+  const now = ctx.currentTime; const vol = 0.9 + Math.random() * 0.1;
+  const mSrc = ctx.createBufferSource(); mSrc.buffer = getNoiseBuffer(ctx);
+  const mLP = ctx.createBiquadFilter(); mLP.type = "lowpass";
+  mLP.frequency.setValueAtTime(300, now); mLP.Q.setValueAtTime(0.7, now);
+  mLP.frequency.exponentialRampToValueAtTime(80, now + 0.06);
+  const mG = ctx.createGain(); mG.gain.setValueAtTime(0.12 * vol, now);
+  mG.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+  mSrc.connect(mLP); mLP.connect(mG); mG.connect(ctx.destination);
+  mSrc.start(now); mSrc.stop(now + 0.085);
+}
+
+// ─────────────────────────────────────────────
 // PUBLIC API
 // ─────────────────────────────────────────────
+
+const keyFns: Record<SoundProfile, (ctx: AudioContext, ok: boolean) => void> = {
+  lubed: playLubedKey, blue: playBlueKey, brown: playBrownKey,
+  red: playRedKey, topre: playTopreKey, membrane: playMembraneKey,
+};
+const spaceFns: Record<SoundProfile, (ctx: AudioContext) => void> = {
+  lubed: playLubedSpace, blue: playBlueSpace, brown: playBrownSpace,
+  red: playRedSpace, topre: playTopreSpace, membrane: playMembraneSpace,
+};
 
 export function playKeySound(profile: SoundProfile, isCorrect: boolean = true) {
   try {
     const ctx = getAudioContext();
-    if (profile === "blue") {
-      playBlueKey(ctx, isCorrect);
-    } else {
-      playLubedKey(ctx, isCorrect);
-    }
-  } catch {
-    // Audio not available
-  }
+    (keyFns[profile] || playLubedKey)(ctx, isCorrect);
+  } catch { /* */ }
 }
 
 export function playSpaceSound(profile: SoundProfile) {
   try {
     const ctx = getAudioContext();
-    if (profile === "blue") {
-      playBlueSpace(ctx);
-    } else {
-      playLubedSpace(ctx);
-    }
-  } catch {
-    // Audio not available
-  }
+    (spaceFns[profile] || playLubedSpace)(ctx);
+  } catch { /* */ }
 }
 
 export function playCompleteSound() {

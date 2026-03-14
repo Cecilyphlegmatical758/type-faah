@@ -91,7 +91,7 @@ export default function Results({
         className="text-center mt-4 text-xs tracking-wider"
         style={{ color: "var(--text-dim)", opacity: 0.5 }}
       >
-        or press cmd+enter
+        press enter or tab+enter to restart
       </div>
     </div>
   );

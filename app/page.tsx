@@ -165,7 +165,14 @@ export default function Home() {
         return;
       }
 
-      if (gameState === "finished") return;
+      // Allow Enter or any key to restart from finished state
+      if (gameState === "finished") {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          restartGame();
+        }
+        return;
+      }
       if (!isFocused) {
         setIsFocused(true);
         inputRef.current?.focus();
