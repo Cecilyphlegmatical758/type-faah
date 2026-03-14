@@ -304,7 +304,7 @@ const mistakeSounds: HTMLAudioElement[] = [];
 
 function ensureMistakeSounds() {
   if (mistakeSounds.length === 0) {
-    const files = ["/sounds/mistake-5.mp3", "/sounds/mistake-10.mp3", "/sounds/mistake-15.mp3"];
+    const files = ["/sounds/mistake-5.mp3", "/sounds/mistake-10.mp3", "/sounds/mistake-15.mp3", "/sounds/mistake-cid.mp3"];
     for (const f of files) {
       const a = new Audio(f);
       a.volume = 0.7;

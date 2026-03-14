@@ -243,7 +243,7 @@ export default function Home() {
             for (let m = oldCount + 1; m <= newCount; m++) {
               if (m % mt1Ref.current === 0) {
                 const cycle = (m / mt1Ref.current) - 1;
-                playMistakeSoundByIndex(cycle % 3);
+                playMistakeSoundByIndex(cycle % 4);
               }
             }
           }
@@ -277,7 +277,7 @@ export default function Home() {
           const newCount = incorrectCharsRef.current + 1;
           if (soundEnabledRef.current && mt1Ref.current > 0 && newCount % mt1Ref.current === 0) {
             const cycle = (newCount / mt1Ref.current) - 1; // 0, 1, 2, 3, 4...
-            playMistakeSoundByIndex(cycle % 3); // rotates through 3 sounds
+            playMistakeSoundByIndex(cycle % 4); // rotates through 4 sounds
           }
         }
         setTotalCharsTyped((prev) => prev + 1);
