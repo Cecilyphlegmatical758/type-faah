@@ -212,25 +212,36 @@ export default function TypingArea({
         </div>
       </div>
 
-      {/* Focus overlay */}
+      {/* Focus overlay - clean, minimal */}
       {!isFocused && (
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-2xl cursor-pointer"
+          className="absolute inset-0 flex items-center justify-center cursor-pointer"
           onClick={onFocus}
           style={{
-            backgroundColor: "rgba(0,0,0,0.3)",
-            backdropFilter: "blur(6px)",
-            WebkitBackdropFilter: "blur(6px)",
+            backdropFilter: "blur(4px)",
+            WebkitBackdropFilter: "blur(4px)",
           }}
         >
           <div
-            className="px-7 py-3.5 rounded-xl text-[13px] font-medium tracking-wide focus-pulse"
+            className="flex items-center gap-3 px-8 py-4 rounded-2xl text-[14px] tracking-wider focus-pulse"
             style={{
-              border: "1px solid var(--border)",
               color: "var(--text-dim)",
-              backgroundColor: "rgba(0,0,0,0.35)",
             }}
           >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ opacity: 0.5 }}
+            >
+              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z" />
+              <path d="M12 16v-4M12 8h.01" />
+            </svg>
             click or press any key to focus
           </div>
         </div>
