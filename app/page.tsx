@@ -16,9 +16,10 @@ interface TypedChar {
 }
 
 export default function Home() {
-  // Theme & timer
+  // Theme & timer & sound
   const [theme, setTheme] = useState("default");
   const [timerDuration, setTimerDuration] = useState(30);
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
   // Game state
   const [gameState, setGameState] = useState<GameState>("idle");
@@ -41,6 +42,8 @@ export default function Home() {
   const [totalCharsTyped, setTotalCharsTyped] = useState(0);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const soundEnabledRef = useRef(soundEnabled);
+  soundEnabledRef.current = soundEnabled;
 
   // Apply theme
   useEffect(() => {
@@ -83,7 +86,7 @@ export default function Home() {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
-    playCompleteSound();
+    if (soundEnabledRef.current) playCompleteSound();
   }, []);
 
   const startGame = useCallback(() => {
@@ -155,7 +158,7 @@ export default function Home() {
       if (e.key === "Backspace") {
         e.preventDefault();
         if (currentCharIndex > 0) {
-          playKeySound(true);
+          if (soundEnabledRef.current) playKeySound(true);
           setCurrentCharIndex((prev) => prev - 1);
           setTypedChars((prev) => {
             const newTyped = [...prev];
@@ -172,7 +175,7 @@ export default function Home() {
         e.preventDefault();
         if (currentCharIndex === 0) return; // Don't allow empty words
 
-        playSpaceSound();
+        if (soundEnabledRef.current) playSpaceSound();
 
         // Move to next word
         setCurrentWordIndex((prev) => prev + 1);
@@ -204,7 +207,7 @@ export default function Home() {
         }
         setTotalCharsTyped((prev) => prev + 1);
 
-        playKeySound(isCorrect);
+        if (soundEnabledRef.current) playKeySound(isCorrect);
 
         setTypedChars((prev) => {
           const newTyped = [...prev];
@@ -320,6 +323,8 @@ export default function Home() {
           restartGame();
         }}
         isRunning={gameState === "running"}
+        soundEnabled={soundEnabled}
+        onSoundToggle={() => setSoundEnabled((prev) => !prev)}
       />
 
       {/* Main content */}

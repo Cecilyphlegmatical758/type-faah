@@ -4,8 +4,8 @@ import React from "react";
 
 const themes = [
   { id: "default", color: "#a7c4a0", label: "Sage" },
-  { id: "ocean", color: "#34495e", label: "Ocean" },
-  { id: "lavender", color: "#7c4dff", label: "Lavender" },
+  { id: "ocean", color: "#1a5276", label: "Ocean" },
+  { id: "lavender", color: "#9b59b6", label: "Lavender" },
   { id: "rose", color: "#f48fb1", label: "Rose" },
   { id: "coral", color: "#ff7043", label: "Coral" },
   { id: "amber", color: "#ffd54f", label: "Amber" },
@@ -19,6 +19,8 @@ interface HeaderProps {
   currentTimer: number;
   onTimerChange: (time: number) => void;
   isRunning: boolean;
+  soundEnabled: boolean;
+  onSoundToggle: () => void;
 }
 
 export default function Header({
@@ -27,22 +29,27 @@ export default function Header({
   currentTimer,
   onTimerChange,
   isRunning,
+  soundEnabled,
+  onSoundToggle,
 }: HeaderProps) {
   return (
-    <header className="flex items-center justify-between px-8 py-6 max-w-[1400px] mx-auto w-full">
+    <header className="flex items-center justify-between px-8 py-5 max-w-[1400px] mx-auto w-full">
       {/* Logo */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5 select-none">
         <span
-          className="text-2xl font-bold tracking-tight"
+          className="text-[22px] font-bold tracking-tight"
           style={{ color: "var(--accent)" }}
         >
           keyb
         </span>
-        <span className="text-2xl font-light" style={{ color: "var(--text-dim)" }}>
+        <span
+          className="text-[22px] font-light"
+          style={{ color: "var(--text-dim)", opacity: 0.4 }}
+        >
           /
         </span>
         <span
-          className="text-2xl font-light tracking-wide"
+          className="text-[22px] font-light tracking-wide"
           style={{ color: "var(--text-dim)" }}
         >
           type
@@ -50,20 +57,21 @@ export default function Header({
       </div>
 
       {/* Center: Theme dots + Timer */}
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-6">
         {/* Theme dots */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-[6px]">
           {themes.map((theme) => (
             <button
               key={theme.id}
               onClick={() => onThemeChange(theme.id)}
-              className="relative w-5 h-5 rounded-full transition-all duration-300 hover:scale-125 focus:outline-none"
+              className="relative w-[18px] h-[18px] rounded-full transition-all duration-300 hover:scale-[1.25] focus:outline-none"
               style={{
                 backgroundColor: theme.color,
                 boxShadow:
                   currentTheme === theme.id
-                    ? `0 0 0 2px var(--bg), 0 0 0 4px ${theme.color}`
+                    ? `0 0 0 2px var(--bg), 0 0 0 3.5px ${theme.color}`
                     : "none",
+                opacity: currentTheme === theme.id ? 1 : 0.7,
               }}
               title={theme.label}
               aria-label={`Switch to ${theme.label} theme`}
@@ -71,17 +79,23 @@ export default function Header({
           ))}
         </div>
 
+        {/* Divider */}
+        <div
+          className="w-px h-5"
+          style={{ backgroundColor: "var(--border)", opacity: 0.5 }}
+        />
+
         {/* Timer selector */}
         <div
-          className="flex items-center rounded-xl px-1 py-1 gap-1"
+          className="flex items-center rounded-xl px-1 py-1 gap-[2px]"
           style={{ backgroundColor: "var(--bg-secondary)" }}
         >
           {timerOptions.map((time) => (
             <button
               key={time}
               onClick={() => !isRunning && onTimerChange(time)}
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                isRunning ? "cursor-default" : "cursor-pointer"
+              className={`px-3.5 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-200 ${
+                isRunning ? "cursor-default opacity-60" : "cursor-pointer hover:opacity-100"
               }`}
               style={{
                 backgroundColor:
@@ -92,6 +106,7 @@ export default function Header({
                   currentTimer === time
                     ? "0 2px 8px rgba(0,0,0,0.2)"
                     : "none",
+                opacity: currentTimer === time ? 1 : undefined,
               }}
               disabled={isRunning}
             >
@@ -100,8 +115,8 @@ export default function Header({
           ))}
           <button
             onClick={() => !isRunning && onTimerChange(0)}
-            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-              isRunning ? "cursor-default" : "cursor-pointer"
+            className={`px-3.5 py-1.5 rounded-lg text-[14px] font-medium transition-all duration-200 ${
+              isRunning ? "cursor-default opacity-60" : "cursor-pointer hover:opacity-100"
             }`}
             style={{
               backgroundColor:
@@ -109,6 +124,7 @@ export default function Header({
               color: currentTimer === 0 ? "var(--accent)" : "var(--text-dim)",
               boxShadow:
                 currentTimer === 0 ? "0 2px 8px rgba(0,0,0,0.2)" : "none",
+              opacity: currentTimer === 0 ? 1 : undefined,
             }}
             disabled={isRunning}
           >
@@ -117,8 +133,48 @@ export default function Header({
         </div>
       </div>
 
-      {/* Right side placeholder for balance */}
-      <div className="w-[120px]" />
+      {/* Right: Sound toggle */}
+      <div className="w-[120px] flex justify-end">
+        <button
+          onClick={onSoundToggle}
+          className="p-2 rounded-lg transition-all duration-200 hover:scale-110"
+          style={{ color: soundEnabled ? "var(--accent)" : "var(--text-dim)" }}
+          title={soundEnabled ? "Sound on" : "Sound off"}
+          aria-label={soundEnabled ? "Mute sounds" : "Enable sounds"}
+        >
+          {soundEnabled ? (
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+            </svg>
+          ) : (
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <line x1="23" y1="9" x2="17" y2="15" />
+              <line x1="17" y1="9" x2="23" y2="15" />
+            </svg>
+          )}
+        </button>
+      </div>
     </header>
   );
 }
